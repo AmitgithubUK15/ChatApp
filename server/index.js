@@ -1,6 +1,8 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const {graphqlHTTP} = require("express-graphql");
+
 
 dotenv.config();
 const port = process.env.PORT || 3000;
