@@ -1,5 +1,6 @@
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema } = require('graphql');
 const {buildSchema} = require("graphql");
+const { SignupUser } = require('../controllers/User.controllers');
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -39,17 +40,17 @@ const MutationType = new GraphQLObjectType({
                 password:{type:GraphQLString}
             },
             resolve: (parent,args,context)=>{
-                if(!context.uesr || context.user.role !== "admin"){
+                if(!context.user || context.user.role !== "admin"){
                     throw new Error("Unauthorized")
                 }
-                return createUser;
+                return SignupUser(args);
             }
         }
     }
 })
 
 
-const schema = new GraphQLObjectType({
+const schema = new GraphQLSchema({
     query:QueryType,
     mutation:MutationType
 })

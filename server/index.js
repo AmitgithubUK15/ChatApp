@@ -2,11 +2,15 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const {graphqlHTTP} = require("express-graphql");
+const cors = require("cors")
 
+// routers
+const UserRouter = require("./Routes/User.route.js")
 
 dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
+app.use(cors());
 
 mongoose.connect(process.env.URI)
 .then(()=>{
@@ -16,9 +20,12 @@ mongoose.connect(process.env.URI)
     console.log(error);
 })
 
-app.get("/",(req,res)=>{
-    console.log("hello");
+app.use((req,res,next)=>{
+    req.user = {role:'admin'}
+    next();
 })
+
+app.use("/api",UserRouter)
 
 app.listen(port,()=>{
     console.log(`Server is connected at port ${port}`)
