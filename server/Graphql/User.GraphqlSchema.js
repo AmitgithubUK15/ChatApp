@@ -1,6 +1,6 @@
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema } = require('graphql');
 const {buildSchema} = require("graphql");
-const { SignupUser } = require('../controllers/User.controllers');
+const { SignupUser,GetAllUser } = require('../controllers/User.controllers');
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -21,7 +21,7 @@ const QueryType = new GraphQLObjectType({
                 if(!context.user || context.user.role !== "admin"){
                     throw new Error("Unauthorized")
                 }
-                return users;
+                return GetAllUser();
             }
         }
 
