@@ -1,4 +1,5 @@
-const User = require("../models/User.model.js")
+const User = require("../models/User.model.js");
+const { errorHandler } = require("../utils/error.js");
 
 async function SignupUser(req,next){
   try {
@@ -8,13 +9,13 @@ async function SignupUser(req,next){
      password:req.password
     })
 
-    if(!user) return "user not create";
+    if(!user) return next(errorHandler(500,"User not created"))
 
     const process = await user.save();
     return process;
   } catch (error) {
     console.log(error)
-    return error
+    next(error);
   }
 }
 
@@ -22,12 +23,12 @@ async function SignupUser(req,next){
 async function GetAllUser(){
   try {
     const findall = await User.find();
-    if(!findall)  return "user not found";
+    if(!findall)  return  next(errorHandler(500,"Users not found"))
 
     return findall;
   } catch (error) {
     console.log(error);
-    return error;
+    next(error);
   }
 }
 
