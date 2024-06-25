@@ -20,6 +20,7 @@ mongoose.connect(process.env.URI)
     console.log(error);
 })
 
+
 app.use((req,res,next)=>{
     req.user = {role:'admin'}
     next();
@@ -27,9 +28,8 @@ app.use((req,res,next)=>{
 
 app.use("/api",UserRouter)
 
-app.listen(port,()=>{
-    console.log(`Server is connected at port ${port}`)
-})
+
+
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
@@ -40,3 +40,8 @@ app.use((err, req, res, next) => {
         message,
     });
 });
+
+app.listen(port,()=>{
+    console.log(`Server is connected at port ${port}`)
+})
+

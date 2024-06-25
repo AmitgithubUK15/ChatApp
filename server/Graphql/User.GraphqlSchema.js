@@ -1,13 +1,21 @@
-const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema } = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
-const { SignupUser,GetAllUser } = require('../controllers/User.controllers');
+const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controllers');
 
 const UserType = new GraphQLObjectType({
     name:'User',
     fields:{
         username:{type:GraphQLString},
         email:{type:GraphQLString},
-        password:{type:GraphQLString}
+        password:{type:GraphQLString},
+    }
+});
+
+const MessageType = new GraphQLObjectType({
+    name: 'Message',
+    fields: {
+        msg: { type: GraphQLString },
+        candidate: { type: UserType }
     }
 });
 
@@ -33,17 +41,32 @@ const MutationType = new GraphQLObjectType({
     name:"Mutation",
     fields:{
         createUser:{
-            type:UserType,
+            type:MessageType,
             args:{
-                username:{type:GraphQLString},
-                email:{type:GraphQLString},
-                password:{type:GraphQLString}
+                username: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type: new GraphQLNonNull(GraphQLString) },
+                password: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve: (parent,args,context)=>{
                 if(!context.user || context.user.role !== "admin"){
                     throw new Error("Unauthorized")
                 }
                 return SignupUser(args);
+            }
+        },
+
+        signinUser :{
+            type:MessageType,
+            args:{
+                email:{type:GraphQLString},
+                password:{type:GraphQLString}
+            },
+            resolve: (parent,args,context)=>{
+                if(!context.user || context.user.role !== "admin"){
+                    throw new Error("Unauthorized");
+                }
+
+                return Signin(args);
             }
         }
     }

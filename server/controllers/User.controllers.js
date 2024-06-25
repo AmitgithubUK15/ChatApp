@@ -1,21 +1,27 @@
 const User = require("../models/User.model.js");
-const { errorHandler } = require("../utils/error.js");
+const { InternalServerError } = require("../utils/error.js");
+const bcrypt = require("bcrypt");
+
 
 async function SignupUser(req,next){
+
+  const hashpassword = await bcrypt.hash(req.password,8);
   try {
     const user = await User({
      username:req.username,
      email:req.email,
-     password:req.password
+     password:hashpassword
     })
 
-    if(!user) return next(errorHandler(500,"User not created"))
-
     const process = await user.save();
-    return process;
+
+    if(!process) throw new InternalServerError("User not created");
+    
+    const {password:pass, ...rest} = user._doc;
+    return {msg:"User created successfully",candidate:rest};
   } catch (error) {
-    console.log(error)
-    next(error);
+   
+    throw new InternalServerError(error.message || "Internal server error");
   }
 }
 
@@ -23,16 +29,39 @@ async function SignupUser(req,next){
 async function GetAllUser(){
   try {
     const findall = await User.find();
-    if(!findall)  return  next(errorHandler(500,"Users not found"))
+    if(!findall) throw new InternalServerError("Users not found"); 
 
     return findall;
   } catch (error) {
     console.log(error);
-    next(error);
+    if(!findall) throw new InternalServerError("Users not found"); 
+  }
+}
+
+async function Signin(req){
+  const {email,password} = req;
+  console.log(req)
+  try {
+     const user = await User.findOne({email});
+     console.log(user);
+     if(!user)  throw new InternalServerError("Wrong Credential"); 
+     
+     const checkPassword = await bcrypt.compare(password, user.password);
+   
+    if (!checkPassword) {
+      throw new InternalServerError("Wrong Password");
+    }
+     const {checkpassword:pass, ...rest} = user._doc;
+
+     return {msg:"Login successfull",candidate:rest};
+  } catch (error) {
+    console.log(error);
+    throw new InternalServerError(error.message || "Internal server error");
   }
 }
 
 module.exports = {
     SignupUser,
-    GetAllUser
+    GetAllUser,
+    Signin
 }
