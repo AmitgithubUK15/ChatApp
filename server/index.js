@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const {graphqlHTTP} = require("express-graphql");
 const cors = require("cors")
+const cookieParser = require("cookie-parser");
 
 // routers
 const UserRouter = require("./Routes/User.route.js")
@@ -11,6 +12,7 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 
 mongoose.connect(process.env.URI)
 .then(()=>{

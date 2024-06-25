@@ -6,7 +6,7 @@ const graphqlAuthorize = (req, res, next) => {
     graphqlHTTP({
         schema: schema,
         graphiql: true,
-        context: { user: req.user },
+        context: { user: req.user,res },
         customFormatErrorFn: (err) => {
             console.error(err); // Log the error
 

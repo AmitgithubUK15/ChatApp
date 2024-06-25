@@ -15,7 +15,7 @@ const MessageType = new GraphQLObjectType({
     name: 'Message',
     fields: {
         msg: { type: GraphQLString },
-        candidate: { type: UserType }
+        candidate: { type: UserType },
     }
 });
 
@@ -66,7 +66,7 @@ const MutationType = new GraphQLObjectType({
                     throw new Error("Unauthorized");
                 }
 
-                return Signin(args);
+                return Signin(args,context.res);
             }
         }
     }

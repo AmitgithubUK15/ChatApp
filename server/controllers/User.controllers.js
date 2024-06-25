@@ -1,6 +1,7 @@
 const User = require("../models/User.model.js");
 const { InternalServerError } = require("../utils/error.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 async function SignupUser(req,next){
@@ -38,12 +39,12 @@ async function GetAllUser(){
   }
 }
 
-async function Signin(req){
+async function Signin(req,res){
   const {email,password} = req;
-  console.log(req)
+
   try {
      const user = await User.findOne({email});
-     console.log(user);
+     
      if(!user)  throw new InternalServerError("Wrong Credential"); 
      
      const checkPassword = await bcrypt.compare(password, user.password);
@@ -51,7 +52,10 @@ async function Signin(req){
     if (!checkPassword) {
       throw new InternalServerError("Wrong Password");
     }
-     const {checkpassword:pass, ...rest} = user._doc;
+
+    const token = jwt.sign({id:user._id},process.env.JWT_PASS_KEY)
+     const {password:pass, ...rest} = user._doc;
+     res.cookie('token',token,{httpOnly:true});
 
      return {msg:"Login successfull",candidate:rest};
   } catch (error) {
