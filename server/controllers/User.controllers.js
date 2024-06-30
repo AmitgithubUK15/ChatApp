@@ -53,13 +53,15 @@ async function Signin(req,res){
       throw new InternalServerError("Wrong Password");
     }
 
-    const token = jwt.sign({id:user._id},process.env.JWT_PASS_KEY)
-     const {password:pass, ...rest} = user._doc;
+    const token = jwt.sign({id:user._id},process.env.JWT_PASS_KEY,{ expiresIn: '1h' })
+
+    const {password:pass, ...rest} = user._doc;
+
      res.cookie('token',token,{httpOnly:true});
 
      return {msg:"Login successfull",candidate:rest};
   } catch (error) {
-    console.log(error);
+   
     throw new InternalServerError(error.message || "Internal server error");
   }
 }

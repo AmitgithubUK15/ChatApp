@@ -1,9 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const {graphqlHTTP} = require("express-graphql");
 const cors = require("cors")
 const cookieParser = require("cookie-parser");
+const {createServer} = require("http");
+const {Server} = require("socket.io");
 
 // routers
 const UserRouter = require("./Routes/User.route.js")
@@ -11,16 +12,36 @@ const UserRouter = require("./Routes/User.route.js")
 dotenv.config();
 const port = process.env.PORT || 3000;
 const app = express();
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_SOCKET_URL, methods: ["GET", "POST"], credentials: true }));
 app.use(cookieParser());
 
-mongoose.connect(process.env.URI)
+mongoose.connect(process.env.URI, )
 .then(()=>{
     console.log("Connected to MongoDB");
 })
 .catch((error)=>{
     console.log(error);
 })
+
+
+// socket 
+const server = createServer(app);
+const io = new Server(server,
+    {
+    cors: {
+      origin: process.env.CLIENT_SOCKET_URL,
+      methods: ["GET", "POST"],
+    }
+  }
+);
+
+  server.listen(port, () => {
+    console.log(`Server is running at port ${port}`);
+  });
+
+
+
+
 
 
 app.use((req,res,next)=>{
@@ -32,6 +53,17 @@ app.use("/api",UserRouter)
 
 
 
+io.on('connection' ,(socket)=>{
+
+    console.log('a user connected',socket.id);
+
+    socket.on('disconnect',(socket)=>{
+        console.log(`disconnect`)
+    })
+}
+
+
+)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
@@ -43,7 +75,5 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(port,()=>{
-    console.log(`Server is connected at port ${port}`)
-})
+
 

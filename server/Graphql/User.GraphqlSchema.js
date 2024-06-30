@@ -5,6 +5,7 @@ const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controller
 const UserType = new GraphQLObjectType({
     name:'User',
     fields:{
+        _id:{type:GraphQLString},
         username:{type:GraphQLString},
         email:{type:GraphQLString},
         password:{type:GraphQLString},
