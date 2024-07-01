@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { ApolloProvider } from '@apollo/client';
+import client from '../ApilloClient/login.js';
+import {gql, useMutation} from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 
+const LOGIN_USER = gql`
+ mutation Login($email:String!,$password:String!){
+signinUser(email:$email,password:$password){
+ msg,
+ candidate{
+ _id
+ username
+ }
+}
+ }
+`
 
 export default function Login() {
     const [Showpassword,setShowPassword] = useState(false);
-    
+    const [email,setEmail] = useState('');
+    const [password,setPassword] = useState('');
+    const [signinUser,{data,loading,error}] = useMutation(LOGIN_USER);
+    const navigate = useNavigate();
     
     function showPassword(){
         setShowPassword(true);
@@ -14,9 +32,35 @@ export default function Login() {
      function hidePassword(){
        setShowPassword(false);
      }
+
+     useEffect(()=>{
+      
+       if(data){
+        setEmail('')
+      setPassword('')
+      alert(data.signinUser.msg);
+      localStorage.setItem('token',data.signinUser.candidate._id);
+      console.log(data);
+      navigate("/home")
+       }
+     },[data])
+
+
+     async function SigninUser(e){
+      e.preventDefault();
+      try {
+         await signinUser({variables:{email,password}})
+        
+      } catch (error) {
+        console.log(error);
+      }
+     }
+
   return (
-    <div className='flex items-center h-full'>
-      <div className=' w-[500px] mx-auto border bg-zinc-100 rounded-lg'>
+    
+   <ApolloProvider client={client} >
+     <div className='flex items-center h-full'>
+      <div className=' w-[500px] mx-auto border bg-zinc-200 rounded-lg'>
         <div className='flex flex-col gap-5 my-5'>
 
            <div className='text-center my-3 flex gap-2 mx-auto'>
@@ -32,30 +76,40 @@ export default function Login() {
            </div>
 
            <div className='my-3' >
-           <form className='flex flex-col gap-5 mx-3'>
+           <form onSubmit={SigninUser} className='flex flex-col gap-5 mx-3'>
+
               <div className=' border my-2 overflow-hidden rounded-md'>
-              <input type="email" 
+              <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)}
               className=' w-full p-3 outline-none font-sens text-gray-500 ' placeholder='Enter Email'/>
               </div>
 
               <div className='bg-white flex border my-2  overflow-hidden rounded-md'>
-              <input type={Showpassword === true ? "text": "password"}
+
+              <input type={Showpassword === true ? "text": "password"} value={password} onChange={(e)=>setPassword(e.target.value)}
                className=' w-full p-3 outline-none font-sans text-gray-500' placeholder='Enter Password' />
+
               <div className=' m-2'
               onMouseEnter={showPassword} onMouseLeave={hidePassword}   >
+
                  <FontAwesomeIcon  icon={Showpassword ? faEyeSlash : faEye} />
                  </div>
+
               </div>
+
               <div className='border my-2  overflow-hidden rounded-md'>
-              <button type="button" 
+              <button type="submit" 
               className=' w-full p-3 outline-none bg-purple-600 font-bold text-white text-xl hover:bg-purple-800 transition-all ease-in'>
-                Login
+               {loading ? "Loging...":" Login"}
               </button>
               </div>
+
            </form>
+
+           <p className='text-red-500'>{error && error.message}</p>
            </div>
         </div>
       </div>
     </div>
+   </ApolloProvider>
   )
 }
