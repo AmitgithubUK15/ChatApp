@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import {gql, useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../redux/user/userSlice';
 
 const LOGIN_USER = gql`
  mutation Login($email:String!,$password:String!){
@@ -22,6 +24,10 @@ export default function Login() {
     const [password,setPassword] = useState('');
     const [signinUser,{data,loading,error}] = useMutation(LOGIN_USER);
     const navigate = useNavigate();
+    const Dispatch = useDispatch();
+
+
+  
     
     function showPassword(){
         setShowPassword(true);
@@ -30,14 +36,17 @@ export default function Login() {
      function hidePassword(){
        setShowPassword(false);
      }
+ 
 
+     
      useEffect(()=>{
       
        if(data){
         setEmail('')
       setPassword('')
       alert(data.signinUser.msg);
-      localStorage.setItem('token',data.signinUser.candidate._id);
+      Dispatch(loginSuccess(data.signinUser.candidate._id))
+      // localStorage.setItem('token',data.signinUser.candidate._id);
       console.log(data);
       navigate("/home")
        }
@@ -102,7 +111,7 @@ export default function Login() {
 
            </form>
 
-           <p className='text-red-500'>{error && error.message}</p>
+           <p className='text-red-500  text-center'>{error && error.message}</p>
            </div>
         </div>
       </div>
