@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { ApolloProvider } from '@apollo/client';
-import client from '../ApilloClient/login.js';
 import {gql, useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -58,8 +56,7 @@ export default function Login() {
 
   return (
     
-   <ApolloProvider client={client} >
-     <div className='flex items-center h-full'>
+    <div className='flex items-center h-full'>
       <div className=' w-[500px] mx-auto border bg-zinc-200 rounded-lg'>
         <div className='flex flex-col gap-5 my-5'>
 
@@ -110,6 +107,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-   </ApolloProvider>
   )
 }

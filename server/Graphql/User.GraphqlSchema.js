@@ -1,6 +1,8 @@
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
 const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controllers');
+const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
+const { GraphQLError } = require('graphql');
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -23,19 +25,29 @@ const MessageType = new GraphQLObjectType({
 
 const QueryType = new GraphQLObjectType({
     name: 'Query',
-    fields:{
-        users:{
-            type: new GraphQLList(UserType),
-            resolve: (parent,args,context) =>{
-                if(!context.user || context.user.role !== "admin"){
-                    throw new Error("Unauthorized")
-                }
-                return GetAllUser();
+    fields: {
+      users: {
+        type: new GraphQLList(UserType),
+        resolve: async (parent, args, context) => {
+          try {
+            await restrictToLoggedinUserOnly(context);
+            if (!context.user || context.user.role !== 'admin') {
+              throw new GraphQLError('Unauthorized', {
+                extensions: { code: 'UNAUTHORIZED' }
+              });
             }
+            // Fetch and return the users from your database
+            return GetAllUser();
+          } catch (error) {
+            console.error('Error in resolver:', error);
+            throw new GraphQLError(error.message, {
+              extensions: { code: error.extensions && error.extensions.code || 'INTERNAL_SERVER_ERROR' }
+            });
+          }
         }
-
-}
-});
+      }
+    }
+  });
 
 
 const MutationType = new GraphQLObjectType({
@@ -63,7 +75,7 @@ const MutationType = new GraphQLObjectType({
                 password:{type:GraphQLString}
             },
             resolve: (parent,args,context)=>{
-                if(!context.user || context.user.role !== "admin"){
+                if( !context.user || context.user.role !== 'admin'){
                     throw new Error("Unauthorized");
                 }
 

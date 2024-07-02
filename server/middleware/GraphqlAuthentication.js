@@ -1,38 +1,23 @@
 const { graphqlHTTP } = require('express-graphql');
-const schema = require("../Graphql/User.GraphqlSchema.js");
-const { AppError, InternalServerError } = require('../utils/error');
+const schema = require('../Graphql/User.graphqlSchema');
 
 const graphqlAuthorize = (req, res, next) => {
     graphqlHTTP({
         schema: schema,
         graphiql: true,
-        context: { user: req.user,res },
+        context: { req, res, user: req.user }, // Pass req, res, and user to context
         customFormatErrorFn: (err) => {
             console.error(err); // Log the error
-
-            // If the error is an instance of AppError, format it accordingly
-            if (err.originalError instanceof AppError) {
-                return {
-                    message: err.message,
-                    statusCode: err.originalError.statusCode,
-                    locations: err.locations,
-                    path: err.path,
-                };
-            }
-
-            // For other errors, return a generic internal server error message
             return {
-                message: 'Internal Server Error',
-                statusCode: 500,
+                message: err.message,
                 locations: err.locations,
                 path: err.path,
+                extensions: {
+                    code: err.extensions && err.extensions.code || 500,
+                },
             };
         }
-    })(req, res, (err) => {
-        if (err) {
-            next(err); // Pass the error to the next middleware
-        }
-    });
+    })(req, res, next);
 };
 
 module.exports = graphqlAuthorize;
