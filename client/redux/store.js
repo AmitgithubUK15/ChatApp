@@ -3,8 +3,9 @@ import userSlcie from "./user/userSlice";
 import {persistStore,persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+
 const rootreducer = combineReducers({
-    user:userSlcie
+    user:userSlcie,
 })
 
 const persistConfig = {

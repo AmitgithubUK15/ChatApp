@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../redux/user/userSlice';
 
+
 const LOGIN_USER = gql`
  mutation Login($email:String!,$password:String!){
 signinUser(email:$email,password:$password){
@@ -25,7 +26,7 @@ export default function Login() {
     const [signinUser,{data,loading,error}] = useMutation(LOGIN_USER);
     const navigate = useNavigate();
     const Dispatch = useDispatch();
-
+    
 
   
     
@@ -46,8 +47,7 @@ export default function Login() {
       setPassword('')
       alert(data.signinUser.msg);
       Dispatch(loginSuccess(data.signinUser.candidate._id))
-      // localStorage.setItem('token',data.signinUser.candidate._id);
-      console.log(data);
+      
       navigate("/home")
        }
      },[data])

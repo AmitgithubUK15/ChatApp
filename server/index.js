@@ -54,9 +54,15 @@ app.use("/api",UserRouter)
 
 
 io.on('connection' ,(socket)=>{
-
+    
     console.log('a user connected',socket.id);
 
+    socket.on('chatMessage', (data) => {
+      console.log(`Message from ${data.chat.id}: ${data.chat.msg}`);
+
+      // Broadcast the message to all connected clients
+      io.emit('chatMessage', data);
+    });
     socket.on('disconnect',(socket)=>{
         console.log(`disconnect`)
     })

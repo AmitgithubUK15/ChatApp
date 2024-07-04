@@ -1,42 +1,66 @@
-import { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+// chat.jsx
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSocket } from '../context/SocketProvider';
 
-function Socket() {
-  const [createConnection,setConnection] = useState(false);
-  const [user,setUser] = useState();
-  useEffect(() => {
-    
-    const socket = io(import.meta.env.VITE_APP_SOCKET_URI,{
-      autoConnect:createConnection,
-    });
-   
-    
-    
-    socket.on('connect', () => {
-      console.log('Connected:', socket.id);
-      setUser(socket.id);
-    });
+function Chat() {
+  
+  const [message, setMessage] = useState('');
+  const socket = useSocket();
+  const [messages,setMessages] = useState([])
+  const [mid,setMid] = useState(0)
 
-    socket.on('disconnect', () => {
-      console.log('Disconnected:', socket.id);
-      setUser(null);
-    });
 
-    
-    return () => {
-      socket.disconnect();
-    };
-  }, [createConnection]);
+   const sendMessage =  useCallback((e)=>{
+    e.preventDefault();
+ 
+    setMid(mid+1);
+    let chat = {
+      msg:message,
+      id:mid
+    }
+     socket.emit("chatMessage", {chat});
 
+     setMessage('');
+  },[socket,mid,message])
+
+
+   useMemo(()=>{
+    socket.on('chatMessage', ({chat }) => {
+      console.log(`Message from  ${chat}`);
+      setMessages((prev) => [...prev, chat]);
+  })
+  },[socket])
+  
+
+  useEffect(()=>{
+    socket.on('chatMessage',sendMessage)
+    return ()=>{
+      socket.off('chatMessage',sendMessage);
+    }
+  },[socket])
 
   return (
     <>
       <h1>Chat App</h1>
-      <button onClick={()=>setConnection(true)}>Connect</button>
-      <button onClick={()=>setConnection(false)}>Disconnect</button>
-      <h2>{user}</h2>
+        <div>
+         <form onSubmit={sendMessage}>
+         <input
+            type="text"
+            // name="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Enter message"
+          />
+          <button type='submit'>Send</button>
+         </form>
+         {messages && messages.map((value)=>(
+          <p key={value.id}>{value.msg}</p>
+         ))}
+        </div>
+     
     </>
   );
 }
 
-export default Socket;
+export default Chat;
+
