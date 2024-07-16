@@ -57,14 +57,17 @@ async function Signin(req,res){
 
     const {password:pass, ...rest} = user._doc;
 
-     res.cookie('token',token,{httpOnly:true});
+    //  res.cookie('token',token,{httpOnly:true});
 
-     return {msg:"Login successfull",candidate:rest};
+     return {msg:"Login successfull",candidate:rest,token:token};
   } catch (error) {
    
     throw new InternalServerError(error.message || "Internal server error");
   }
 }
+
+
+
 
 module.exports = {
     SignupUser,

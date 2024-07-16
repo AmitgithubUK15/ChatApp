@@ -14,7 +14,11 @@ const UserSchema = mongoose.Schema({
         type:String,
         required:true,
     },
-})
+    Rooms:{
+        type:Array,
+    }
+    
+},{timestamps:true})
 
 const User = mongoose.model('user',UserSchema);
 

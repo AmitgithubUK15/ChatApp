@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     S_UID:null,
+    
 }
 
 const userSlice = createSlice({
@@ -10,7 +11,6 @@ const userSlice = createSlice({
     reducers:{
         loginSuccess:(state,action)=>{
             state.S_UID = action.payload;
-            state.SocketConnect = true;
         },
     }
 })

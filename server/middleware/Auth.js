@@ -6,18 +6,18 @@ const jwt = require("jsonwebtoken")
 
 async function restrictToLoggedinUserOnly(context){
 
-    const token = context.req.cookies.token;
-
-    if(!token)  throw new Error("Auth failed, please login");
+   
+    const token = context.req.rawHeaders[15];
+    if(!token)  throw new Error("Authentication failed, please login");
     const user = getUser(token);
 
-    if(!user) throw new Error("Auth failed, please login");
+    if(!user) throw new Error("Authentication failed, please login");
     try {
         const decoded = jwt.verify(token,process.env.JWT_PASS_KEY);
         
         context.user = { ...context.user, ...decoded }; 
     } catch (err) {
-        throw new Error("Auth failed, please login again");
+        throw new Error("Authentication failed, please login again");
     }
 }
 

@@ -5,7 +5,7 @@ import './index.css'
 import { ApolloProvider } from '@apollo/client';
 import client from './ApilloClient/client.js';
 import {Provider} from 'react-redux'
-import { store,persistor } from '../redux/store.js';
+import { store,persistor } from './redux/store.js';
 import { PersistGate } from 'redux-persist/integration/react';
 import SocketProvider from './context/SocketProvider.jsx';
 

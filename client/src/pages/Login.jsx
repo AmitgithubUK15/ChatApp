@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import {gql, useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../redux/user/userSlice';
 
 
 const LOGIN_USER = gql`
@@ -14,7 +14,8 @@ signinUser(email:$email,password:$password){
  candidate{
  _id
  username
- }
+ },
+ token
 }
  }
 `
@@ -27,7 +28,9 @@ export default function Login() {
     const navigate = useNavigate();
     const Dispatch = useDispatch();
     
+    // const {S_UID} = useSelector((state)=>state.user);
 
+    // console.log("suid",S_UID);
   
     
     function showPassword(){
@@ -47,14 +50,14 @@ export default function Login() {
       setPassword('')
       alert(data.signinUser.msg);
       Dispatch(loginSuccess(data.signinUser.candidate._id))
-      
-      navigate("/home")
+      localStorage.setItem("S_ID",data.signinUser.token);
+      navigate("/")
        }
      },[data])
 
 
      async function SigninUser(e){
-      e.preventDefault();
+    e.preventDefault();
       try {
          await signinUser({variables:{email,password}})
         
@@ -77,7 +80,7 @@ export default function Login() {
                
             </h1>
             <div >
-            <img src="/public/images/message_11842947.png" width="45"  height="40"/>
+            <img src="/images/message_11842947.png" width="45"  height="40"/>
             </div>
            </div>
 
