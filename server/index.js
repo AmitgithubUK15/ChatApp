@@ -7,7 +7,8 @@ const {Server} = require("socket.io");
 const {app,server,io} = require("./Socket/socket.js");
 
 // routers
-const UserRouter = require("./Routes/User.route.js")
+const UserRouter = require("./Routes/User.route.js");
+
 
 dotenv.config();
 const port = process.env.PORT || 3000;

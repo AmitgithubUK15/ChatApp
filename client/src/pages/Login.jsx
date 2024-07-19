@@ -13,7 +13,8 @@ signinUser(email:$email,password:$password){
  msg,
  candidate{
  _id
- username
+ username,
+ avatar,
  },
  token
 }
@@ -49,9 +50,9 @@ export default function Login() {
         setEmail('')
       setPassword('')
       alert(data.signinUser.msg);
-      Dispatch(loginSuccess(data.signinUser.candidate._id))
+      Dispatch(loginSuccess(data.signinUser.candidate))
       localStorage.setItem("S_ID",data.signinUser.token);
-      navigate("/")
+      navigate("/rooms")
        }
      },[data])
 
@@ -68,7 +69,7 @@ export default function Login() {
 
   return (
     
-    <div className='flex items-center h-full'>
+    <div className=' w-full flex items-center  h-full'>
       <div className=' w-[500px] mx-auto border bg-zinc-200 rounded-lg'>
         <div className='flex flex-col gap-5 my-5'>
 

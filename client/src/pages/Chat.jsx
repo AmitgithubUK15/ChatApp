@@ -1,7 +1,8 @@
 import {  useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation } from '@apollo/client';
 import { useSocket } from '../context/SocketProvider';
+import SearchBox from '../components/SearchBox';
 
 const SendMessage = gql`
 mutation Msgsend($senderId:String!,$reciverID:String!,$msg:String!,$Date:String!,$Time:String!,$Day:String!){
@@ -16,31 +17,22 @@ mutation Msgsend($senderId:String!,$reciverID:String!,$msg:String!,$Date:String!
 }
 `;
 
-const GetAllUser = gql`
- query getUsers {
- users {
-  username
- }
- }
-`;
 
 export default function Chat() {
 
- const [RequestforChat,{data}] = useMutation(SendMessage);
-//  const {error,data,loading} = useQuery(GetAllUser);
+ const [RequestforChat,{data}] = useMutation(SendMessage)
  const {S_UID} = useSelector((state)=>state.user);
  const [message,setMessage] = useState()
  const [connectID,setConnectID] = useState()
  const socket = useSocket();
  const [MsgList,setMsgList] = useState([])
- const [usersList,setUsersList] = useState()
+
 
  useMemo(()=>{
     if(data !== undefined){
       setTimeout(()=>{
         setMsgList((prev)=>[...prev,data && data.RequestforChat.ChatMsg]);
       },1000)
-      // setUsersList(data);
     }
     else {
       return null;
@@ -89,20 +81,10 @@ useMemo(()=>{
   }
  }
 
- 
-//  async function getusers(){
-//    try {
-//     if(usersList){
-//       console.log(usersList)
-//     }
-//    } catch (error) {
-//     console.log(error);
-//    }
-//  }
-
 
   return (
     <div>
+       <SearchBox />
         <h1>Chat</h1>
         
         <form onSubmit={HandleSubmit} className='m-5'>
@@ -125,9 +107,6 @@ useMemo(()=>{
                 ))}
             </div> 
         </form>
-
-        {/* <h1>Get All user</h1>
-        <button onClick={getusers}>Get</button> */}
     </div>
   )
 }

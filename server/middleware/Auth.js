@@ -8,16 +8,16 @@ async function restrictToLoggedinUserOnly(context){
 
    
     const token = context.req.rawHeaders[15];
-    if(!token)  throw new Error("Authentication failed, please login");
+    if(!token)  throw new Error("Session Expired, please login");
     const user = getUser(token);
 
-    if(!user) throw new Error("Authentication failed, please login");
+    if(!user) throw new Error("Session Expired, please login");
     try {
         const decoded = jwt.verify(token,process.env.JWT_PASS_KEY);
         
         context.user = { ...context.user, ...decoded }; 
     } catch (err) {
-        throw new Error("Authentication failed, please login again");
+        throw new Error("Session Expired, please login again");
     }
 }
 

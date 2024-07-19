@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+
 const UserSchema = mongoose.Schema({
     username:{
         type:String,
@@ -16,6 +17,10 @@ const UserSchema = mongoose.Schema({
     },
     Rooms:{
         type:Array,
+    },
+    avatar:{
+        type:String,
+        default:'https://i.pinimg.com/originals/29/b8/d2/29b8d250380266eb04be05fe21ef19a7.jpg',
     }
     
 },{timestamps:true})

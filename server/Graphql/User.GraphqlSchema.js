@@ -12,6 +12,7 @@ const UserType = new GraphQLObjectType({
         username:{type:GraphQLString},
         email:{type:GraphQLString},
         password:{type:GraphQLString},
+        avatar:{type:GraphQLString},
     }
 });
 
@@ -72,9 +73,6 @@ const MutationType = new GraphQLObjectType({
                 password: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve: (parent,args,context)=>{
-                if(!context.user || context.user.role !== "admin"){
-                    throw new Error("Unauthorized")
-                }
                 return SignupUser(args);
             }
         },

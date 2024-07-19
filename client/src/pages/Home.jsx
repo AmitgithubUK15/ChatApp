@@ -8,10 +8,10 @@ import { Navigate } from 'react-router-dom';
 export default function Home() {
   const {S_UID} = useSelector((state)=>state.user);
   return (
-    <div>
+    <div > 
       Home
       {S_UID !== null?
-      <Navigate to="/chat" />
+      <Navigate to="/rooms" />
       :
       <Navigate to="/login" />
       }
