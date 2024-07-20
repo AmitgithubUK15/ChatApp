@@ -47,6 +47,26 @@ async function AddUserForChat(args) {
   return {ChatMsg: messages };
 }
 
+
+ function CheckOnlineUser(args){
+  const {user_id} = args;
+ 
+  try {
+  
+    const check = ActiveUserMap.get(user_id);
+
+    if(check !== null && check !== undefined){
+      return {msg:true}
+    }
+    else{
+      return {msg:false}
+    }
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
 module.exports = {
   AddUserForChat,
+  CheckOnlineUser
 };

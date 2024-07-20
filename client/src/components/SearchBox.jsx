@@ -6,7 +6,7 @@ export default function SearchBox() {
        
 
        <div className=''>
-         <form action="" className='py-2'>
+         <form action="" className='py-3'>
           <div className=' w-80 mx-auto  flex bg-purple-700 rounded-lg overflow-hidden  '>
             <input type="text" className='p-2 w-full outline-none' placeholder='enter text'/>
             <button className='outline-none border-none p-2  text-white'>Search</button>

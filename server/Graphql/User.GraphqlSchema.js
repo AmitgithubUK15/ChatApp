@@ -3,7 +3,7 @@ const {buildSchema} = require("graphql");
 const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat } = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser } = require('../controllers/Chat.controllers');
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -35,7 +35,7 @@ const MessageType = new GraphQLObjectType({
         msg: { type: GraphQLString },
         candidate: { type: UserType },
         ChatMsg:{type: ChatMessageType},
-        token:{type: GraphQLString}
+        token:{type: GraphQLString},
     }
 });
 
@@ -86,6 +86,16 @@ const MutationType = new GraphQLObjectType({
             resolve: (parent,args,context)=>{
             
                 return Signin(args,context.res);
+            }
+        },
+        CheckUserOnline :{
+            type:MessageType,
+            args:{
+                user_id:{type:new GraphQLNonNull(GraphQLString)}
+            },
+            resolve: async (parent,args,context) =>{
+                await restrictToLoggedinUserOnly(context);
+                return CheckOnlineUser(args);
             }
         },
         RequestforChat :{

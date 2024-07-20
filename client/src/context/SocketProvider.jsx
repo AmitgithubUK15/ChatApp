@@ -20,7 +20,7 @@ const {S_UID}  = useSelector((state)=>state.user);
 useEffect(()=>{
   if(S_UID !== null && socket === null){
     const websocket = io(import.meta.env.VITE_APP_SOCKET_URI,{
-      query:{S_UID}
+      query:{userID:S_UID._id}
     });
     setSocket(websocket);
   }

@@ -16,16 +16,16 @@ const app = express();
   }
 );
 
-const ActiveUserMap = new Map();
+let ActiveUserMap = new Map();
 
 io.on('connection' ,(socket)=>{
   
   console.log("new socket connect", socket.id);
 
-  const userid = socket.handshake.query.S_UID
+  const userid = socket.handshake.query.userID
 
-  
   ActiveUserMap.set(userid,socket.id)
+
   socket.on('disconnect',(socket)=>{
       console.log(`disconnect`)
   })

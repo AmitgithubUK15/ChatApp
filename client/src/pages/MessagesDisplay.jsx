@@ -1,15 +1,16 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import ChatingUser from '../components/ChatingUser';
+import ChatingHeader from '../components/ChatingHeader';
+import ChatBox from '../components/ChatBox';
 
 export default function MessagesDisplay() {
    const {userId} = useParams();
   return (
     <div className='h-full'>
     {userId ? (
-      <div className=' w-[950px]  overflow-hidden  flex  '>
-        <ChatingUser />
+      <div className=' w-[950px] h-full overflow-hidden  flex  flex-col'>
+        <ChatingHeader />
+        <ChatBox/>
       </div>
     )
   :

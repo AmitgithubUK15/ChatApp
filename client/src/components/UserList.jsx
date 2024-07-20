@@ -34,15 +34,15 @@ export default function UserList() {
   }
   
   return (
-    <div className='w-[420px] mx-auto'>
+    <div className='w-[440px] '>
       {userdata && userdata.users.map((value)=>(
        <div key={value._id} >
           {value._id !== S_UID._id ? 
-          (  <Link to={`message/${value._id}`} >
-            <div id='listcomponent' className=' py-5 border-b-2' >       
+          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} >
+            <div id='listcomponent' className=' py-5 border border-b-gray-300' >       
             <div className='flex'>
               <div className='w-20 '>
-                 <div className=' w-16 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
+                 <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
                   <img src={value.avatar} alt="" />
                  </div>
               </div>

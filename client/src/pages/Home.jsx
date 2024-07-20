@@ -1,21 +1,19 @@
-import React from 'react'
-
-// import Socket from './Socket';
-import Chat from './Chat';
+import React, { Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
+const Chat = React.lazy(() => import('./Chat'));
+const Login = React.lazy(() => import('./Login'));
+
 export default function Home() {
-  const {S_UID} = useSelector((state)=>state.user);
+  const { S_UID } = useSelector((state) => state.user);
+
   return (
-    <div > 
+    <div>
       Home
-      {S_UID !== null?
-      <Navigate to="/rooms" />
-      :
-      <Navigate to="/login" />
-      }
-     {/* <Socket /> */}
+      <Suspense fallback={<div>Loading...</div>}>
+        {S_UID ? <Navigate to="/rooms" replace /> : <Navigate to="/login" replace />}
+      </Suspense>
     </div>
-  )
+  );
 }
