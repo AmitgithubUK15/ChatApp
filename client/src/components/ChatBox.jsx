@@ -38,7 +38,6 @@ export default function ChatBox() {
  },[data])
 
  useMemo(()=>{
-  console.log(MsgList);
   if(inputvalue){
    setInputValue("");
   }
@@ -50,9 +49,14 @@ export default function ChatBox() {
  useMemo(()=>{
   if(socket){
    socket.on("chatmessage",(chat)=>{
-     setTimeout(()=>{
-       setMsgList((prev)=>[...prev,chat])
-     },1000)
+     if(chat.senderId === userId){
+      setTimeout(()=>{
+         setMsgList((prev)=>[...prev,chat])
+       },1000)
+     }
+     else {
+      return null;
+     }
    })
   }
  },[socket])
@@ -85,7 +89,7 @@ export default function ChatBox() {
 
     let first = split[0].split(':');
     let log = `${first[0]} : ${first[1]} ${split[1]}`;
-    return log;
+    return log;   
   }
   return (
     <div className='h-full overflow-hidden' >
@@ -96,9 +100,9 @@ export default function ChatBox() {
              {MsgList && MsgList.map((value)=>(
               <div key={value._id} style={{width:"100%",margin:"35px 0"}} className={value.senderId === S_UID._id ? ` flex justify-end text-right` :` flex justify-start`} >
                   <div style={{width:"50%"}}>
-                  <span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-xl font-semibold rounded-xl text-white`
-                    :`bg-slate-500 p-2 inline-block shadow-xl text-xl font-semibold rounded-xl text-white`
-                  }>{value.msg} <span className='text-[12px] font-normal'>{splittime(value.Time)}</span></span>
+                  <span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
+                    :`bg-slate-500 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-white`
+                  }>{value.msg} <span className='font-normal text-[9px] '>{splittime(value.Time)}</span></span>
                   </div>
               </div>
             ))}

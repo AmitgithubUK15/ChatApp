@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 
 const RoomSchema = mongoose.Schema({
-   Participant: {
-    type:Array,
-    required: true
-   },
+   Participant: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+			},
+		],
    messages:[
        {
          type:mongoose.Schema.Types.ObjectId,

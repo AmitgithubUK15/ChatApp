@@ -1,39 +1,16 @@
-import React, { useMemo, useState } from 'react'
-import { gql, useQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux'
-import { ShowChatdisplay } from '../redux/user/userSlice';
+import { useSelector} from 'react-redux'
 import "./index.css"
 
-const UserAccount = gql`
- query getAlluser{
-  users {
-  _id,
-   username,
-   avatar,
-   email,
-  }
- }
-`
+
 
 export default function UserList() {
-  const {data,error} = useQuery(UserAccount);
-  const [userdata,setUserdata] = useState()
-  const {S_UID} = useSelector((state)=> state.user);
-  useMemo(()=>{
-    if(data){
-      setUserdata(data)
-     
-    }
-  },[data])
-
-  if(error){
-    alert(error.message);
-  }
+const {S_UID} = useSelector((state)=>state.user);
+const {Chat} = useSelector((state)=>state.chat);
   
   return (
     <div className='w-[440px] '>
-      {userdata && userdata.users.map((value)=>(
+      {Chat && Chat.ChatUserList.List.ConnectedUser.map((value)=>(
        <div key={value._id} >
           {value._id !== S_UID._id ? 
           (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} >

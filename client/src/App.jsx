@@ -43,7 +43,7 @@ function App() {
               <PrivateRoute />
             </Suspense>
           }>
-            <Route path="/rooms" element={ <Suspense >
+            <Route path="/rooms/*" element={ <Suspense >
               <Chat />
             </Suspense>} />
             <Route path="/Adduser/*" element={<Suspense >

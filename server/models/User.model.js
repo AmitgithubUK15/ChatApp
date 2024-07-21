@@ -15,9 +15,6 @@ const UserSchema = mongoose.Schema({
         type:String,
         required:true,
     },
-    Rooms:{
-        type:Array,
-    },
     avatar:{
         type:String,
         default:'https://i.pinimg.com/originals/29/b8/d2/29b8d250380266eb04be05fe21ef19a7.jpg',
