@@ -42,6 +42,12 @@ export default function SideNav() {
           navigate("/rooms")
     }
 
+    useMemo(()=>{
+      console.log(error)
+    },[error])
+
+
+
   return (
     <div className=' w-20 h-full  'style={{backgroundColor:"rgb(168 0 194)"}} >
         <div className='flex flex-col m-2 gap-6'>

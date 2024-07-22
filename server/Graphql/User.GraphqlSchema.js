@@ -3,7 +3,7 @@ const {buildSchema} = require("graphql");
 const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat, CheckOnlineUser,ChatingUser } = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg } = require('../controllers/Chat.controllers');
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -37,19 +37,24 @@ const ChatingUserLists = new GraphQLObjectType({
     }
 })
 
-const MessageType = new GraphQLObjectType({
+const ResponseType = new GraphQLObjectType({
     name: 'Message',
     fields: {
         msg: { type: GraphQLString },
         candidate: { type: UserType },
         ChatMsg:{type: ChatMessageType},
         token:{type: GraphQLString},
-        List:{type : ChatingUserLists}
+        List:{type : ChatingUserLists},
     }
 });
 
-
-
+const MessagesType = new GraphQLObjectType({
+    name: 'Msg',
+    fields:{
+        Participant :{type : GraphQLList(UserType)},
+        messages:{type : GraphQLList(ChatMessageType)}
+    }
+})
 
 const QueryType = new GraphQLObjectType({
     name: 'Query',
@@ -77,7 +82,7 @@ const MutationType = new GraphQLObjectType({
     name:"Mutation",
     fields:{
         createUser:{
-            type:MessageType,
+            type:ResponseType,
             args:{
                 username: { type: new GraphQLNonNull(GraphQLString) },
                 email: { type: new GraphQLNonNull(GraphQLString) },
@@ -89,7 +94,7 @@ const MutationType = new GraphQLObjectType({
         },
 
         signinUser :{
-            type:MessageType,
+            type:ResponseType,
             args:{
                 email:{type:GraphQLString},
                 password:{type:GraphQLString}
@@ -100,7 +105,7 @@ const MutationType = new GraphQLObjectType({
             }
         },
         CheckUserOnline :{
-            type:MessageType,
+            type:ResponseType,
             args:{
                 user_id:{type:new GraphQLNonNull(GraphQLString)}
             },
@@ -111,17 +116,30 @@ const MutationType = new GraphQLObjectType({
         },
 
         ChatUserList:{
-            type: MessageType,
+            type: ResponseType,
             args:{
                 sender:{type:new GraphQLNonNull(GraphQLString)},
             },
             resolve: async (parent,args,context) =>{
+                await restrictToLoggedinUserOnly(context);
                 return ChatingUser(args)
             }
         },
+
+        GetUserMessages:{
+         type: MessagesType,
+         args:{
+            senderId:{type: new GraphQLNonNull(GraphQLString)},
+            reciverID:{type : new GraphQLNonNull(GraphQLString)}
+         },
+         resolve: async (parent,args,context) => {
+            await restrictToLoggedinUserOnly(context);
+            return Getusermsg(args);
+         }
+        },
     
         RequestforChat :{
-            type:MessageType,
+            type:ResponseType,
             args:{
                 senderId:{type: new GraphQLNonNull(GraphQLString)},
                 reciverID:{type: new GraphQLNonNull(GraphQLString)},

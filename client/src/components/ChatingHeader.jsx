@@ -28,7 +28,6 @@ export default function ChatingHeader() {
  useMemo(()=>{
   setTimeout(()=>{
     if(data){
-      console.log(data);
       setStatus(data.CheckUserOnline.msg)
     }
     else{

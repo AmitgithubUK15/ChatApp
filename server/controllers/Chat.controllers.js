@@ -6,6 +6,7 @@ const { InternalServerError } = require("../utils/error.js");
 
 async function AddUserForChat(args) {
 
+try {
   const { senderId, reciverID, msg,Date,Time,Day } = args;
   const reciversocket = ActiveUserMap.get(args.reciverID);
 
@@ -90,7 +91,7 @@ async function AddUserForChat(args) {
   else{
     const isUserConnected = ChatListforreciver.ConnectedUser.includes(senderId);
     if (!isUserConnected) {
-      ChatListforreciver.ConnectedUser.push(reciverID);
+      ChatListforreciver.ConnectedUser.push(senderId);
       await ChatListforreciver.save();
     } else {
       console.log("User is already in the connected user list.");
@@ -98,6 +99,9 @@ async function AddUserForChat(args) {
   }
 
   return {ChatMsg: messages };
+} catch (error) {
+  throw new InternalServerError(error.message || "Internal server error");
+}
 }
 
 
@@ -137,8 +141,24 @@ async function ChatingUser(args){
   }
 }
 
+
+async function  Getusermsg(args){
+  const {senderId,reciverID} = args;
+  try {
+    const FindUserRoom = await Room.findOne({
+      Participant : {$all :[senderId,reciverID]}
+    }).populate("messages");
+
+    if(!FindUserRoom) throw new InternalServerError("Users not found");
+    return FindUserRoom;
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
 module.exports = {
   AddUserForChat,
   CheckOnlineUser,
-  ChatingUser
+  ChatingUser,
+  Getusermsg
 };

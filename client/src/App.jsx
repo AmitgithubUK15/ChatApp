@@ -1,13 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import Login from "./pages/Login";
-// import PrivateRoute from "./components/PrivateRoute";
-// import SideNav from "./components/SideNav";
 import { useSelector } from "react-redux";
-// import UserAccountList from "./pages/UserAccountList";
-// import Account from "./pages/Account";
-// import Setting from "./pages/Setting";
 import React, { Suspense } from "react";
-// import Chat from "./pages/Chat";
+
 
 const Home = React.lazy(() => import("./pages/Home"));
 const Login = React.lazy(() => import("./pages/Login"));
@@ -20,10 +14,10 @@ const PrivateRoute = React.lazy(()=>import("./components/PrivateRoute"))
 
 function App() {
   const { S_UID } = useSelector((state) => state.user);
-
+  
   return (
     <BrowserRouter>
-      {S_UID ? <Suspense fallback={<div>Loading..</div>}>
+      {S_UID !==null ? <Suspense fallback={<div>Loading..</div>}>
         <SideNav />
       </Suspense> : null}
 

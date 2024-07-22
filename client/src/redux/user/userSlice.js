@@ -12,11 +12,14 @@ const userSlice = createSlice({
         loginSuccess:(state,action)=>{
             state.S_UID = action.payload;
         },
+        logout:(state) =>{
+            state.S_UID = null;
+        },
         ShowChatdisplay:(state)=>{
             state.ChatDisplay = true;
         }
     }
 })
 
-export const {loginSuccess,ShowChatdisplay}  = userSlice.actions;
+export const {loginSuccess,ShowChatdisplay,logout}  = userSlice.actions;
 export default userSlice.reducer;

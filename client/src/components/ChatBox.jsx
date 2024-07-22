@@ -1,8 +1,10 @@
 import { gql, useMutation } from '@apollo/client';
 import React, { useMemo, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../context/SocketProvider';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Hide_Msg_Notification } from '../redux/chatinguserlist/ChatList';
+import { logout } from '../redux/user/userSlice';
 
 const SendMessage = gql`
 mutation Msgsend($senderId:String!,$reciverID:String!,$msg:String!,$Date:String!,$Time:String!,$Day:String!){
@@ -17,25 +19,75 @@ mutation Msgsend($senderId:String!,$reciverID:String!,$msg:String!,$Date:String!
 }
 `;
 
+const GetMessage = gql`
+mutation getmsgs($senderId:String!,$reciverID:String!){
+  GetUserMessages(senderId:$senderId,reciverID:$reciverID){
+  messages{
+   _id,
+   senderId,
+   msg,
+   Time,
+  }
+  }
+}
+`
+
 export default function ChatBox() {
   const {userId} = useParams();
-  const [RequestforChat,{data}] = useMutation(SendMessage);
+  const [RequestforChat] = useMutation(SendMessage);
+  const [GetUserMessages] = useMutation(GetMessage)
   const {S_UID} = useSelector((state)=>state.user);
   const [inputvalue, setInputValue] = useState();
   const socket = useSocket();
-  const [MsgList,setMsgList] = useState([])
+  const [MsgList,setMsgList] = useState()
+  const dispatch = useDispatch();
+  const [sendmsgData,setSendMsgData] = useState();
+  const navigate = useNavigate();
+  const [logged,setLogged] =useState(null);
 
- 
   useMemo(()=>{
-    if(data !== undefined){
+    if(logged){
+      alert(logged);
+      dispatch(logout())
+      navigate("/login")
+    }
+  },[logged])
+  
+  async function getUsermsg(){
+    setMsgList("")
+    try {
+     const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:userId}})
+
+     if(data !== undefined){
+      setMsgList(data.GetUserMessages.messages);
+     }
+    } catch (error) {
+      if(error){
+            if(error.message === "Session Expired, please login"){
+              setLogged(error.message)
+             }
+          }
+          else{
+            console.log(error.message);
+          }
+    }
+  }
+
+  useMemo(()=>{
+    dispatch(Hide_Msg_Notification(userId))
+    getUsermsg();
+  },[userId])
+
+  useMemo(()=>{
+    if(sendmsgData !== undefined){
       setTimeout(()=>{
-        setMsgList((prev)=>[...prev,data && data.RequestforChat.ChatMsg]);
+        setMsgList((prev)=>[...prev,sendmsgData && sendmsgData.RequestforChat.ChatMsg]);
       },1000)
     }
     else {
       return null;
     }
- },[data])
+ },[sendmsgData])
 
  useMemo(()=>{
   if(inputvalue){
@@ -67,7 +119,7 @@ export default function ChatBox() {
       const day = ["Sunday","Monday","Tuesday","Webnesday","Thrusday","Friday","Saturday"]
       const Currentdate = new Date();
       const dayNumber = Currentdate.getDay();
-      await RequestforChat(
+    const {data} =  await RequestforChat(
         {variables:
           {
           senderId:S_UID._id,
@@ -79,8 +131,20 @@ export default function ChatBox() {
         }
       }
     )
+
+    if(data){
+      setSendMsgData(data)
+    }
+
     } catch (error) {
-      console.log(error.message)
+      if(error){
+        if(error.message === "Session Expired, please login"){
+          setLogged(error.message)
+         }
+      }
+      else{
+        console.log(error.message);
+      }
     }
   }
 
@@ -102,7 +166,10 @@ export default function ChatBox() {
                   <div style={{width:"50%"}}>
                   <span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
                     :`bg-slate-500 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-white`
-                  }>{value.msg} <span className='font-normal text-[9px] '>{splittime(value.Time)}</span></span>
+                  }>{value.msg} 
+                  <span className='font-normal  mx-1 text-[9px] '>{splittime(value.Time)}</span>
+
+                  </span>
                   </div>
               </div>
             ))}
