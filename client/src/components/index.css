@@ -9,3 +9,11 @@
 
 /* Chatbox css */
 
+#ChatboxMainContainer{
+    background-image: url("/images/chatbg.jpg");
+    background-position-x: center;
+    background-position-y:center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  
+}

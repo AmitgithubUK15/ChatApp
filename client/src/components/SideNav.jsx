@@ -26,7 +26,6 @@ export default function SideNav() {
     const navigate = useNavigate();
     useEffect(()=>{
         if(data){
-          console.log(data);
           dispatch(Update_User_Chatlist(data));
           
         }
