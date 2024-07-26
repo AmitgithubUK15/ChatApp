@@ -17,6 +17,7 @@ const port = process.env.PORT || 3000;
 app.use(cors({ origin: process.env.CLIENT_SOCKET_URL, methods: ["GET", "POST"], credentials: true }));
 app.use(cookieParser());
 
+
 mongoose.connect(process.env.URI)
 .then(()=>{
     console.log("Connected to MongoDB");

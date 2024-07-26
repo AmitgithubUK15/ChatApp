@@ -41,7 +41,7 @@ export default function UserList() {
             <div className='flex'>
               <div className='w-20 '>
                  <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
-                  <img src={value.avatar} alt="" />
+                  <img src={`${value.avatar}`} alt="" />
                  </div>
               </div>
               <div>

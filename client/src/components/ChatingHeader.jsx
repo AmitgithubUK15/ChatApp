@@ -44,7 +44,7 @@ export default function ChatingHeader() {
     <div className='flex py-2 gap-3'>
       <div>
       <div className='mx-auto  w-10 h-10 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={profileImage && profileImage} alt=""  />
+                   <img src={`${profileImage && profileImage}`} alt=""  />
                 </div>
       </div>
       <div>

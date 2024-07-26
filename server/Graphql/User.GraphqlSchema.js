@@ -1,9 +1,10 @@
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
-const { SignupUser,GetAllUser,Signin } = require('../controllers/User.controllers');
+const { GoogleAuth,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
 const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg } = require('../controllers/Chat.controllers');
+
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -81,23 +82,23 @@ const QueryType = new GraphQLObjectType({
 const MutationType = new GraphQLObjectType({
     name:"Mutation",
     fields:{
-        createUser:{
+        Googlelogin:{
             type:ResponseType,
             args:{
                 username: { type: new GraphQLNonNull(GraphQLString) },
                 email: { type: new GraphQLNonNull(GraphQLString) },
-                password: { type: new GraphQLNonNull(GraphQLString) }
+                avatar: {type: new GraphQLNonNull(GraphQLString)}
             },
             resolve: (parent,args,context)=>{
-                return SignupUser(args);
+                return GoogleAuth(args);
             }
         },
 
         signinUser :{
             type:ResponseType,
             args:{
-                email:{type:GraphQLString},
-                password:{type:GraphQLString}
+                email:{type: new GraphQLNonNull(GraphQLString)},
+                password:{type: new GraphQLNonNull(GraphQLString)}
             },
             resolve: (parent,args,context)=>{
             

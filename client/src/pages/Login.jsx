@@ -5,6 +5,7 @@ import {gql, useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../redux/user/userSlice';
+import GoogleAuth from '../components/GoogleAuth';
 
 
 const LOGIN_USER = gql`
@@ -113,6 +114,7 @@ export default function Login() {
               </button>
               </div>
 
+               <GoogleAuth />
            </form>
 
            <p className='text-red-500  text-center'>{error && error.message}</p>

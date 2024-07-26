@@ -53,7 +53,7 @@ export default function SideNav() {
             <Link to="/account">
             <div>
                 <div className='mx-auto  w-12 h-12 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={S_UID && S_UID.avatar} alt=""  />
+                   <img src={`${S_UID && S_UID.avatar}`} alt=""  />
                 </div>
             </div>
             </Link>
