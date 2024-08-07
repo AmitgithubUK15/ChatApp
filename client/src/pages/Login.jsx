@@ -90,14 +90,14 @@ export default function Login() {
            <form onSubmit={SigninUser} className='flex flex-col gap-5 mx-3'>
 
               <div className=' border my-2 overflow-hidden rounded-md'>
-              <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)}
+              <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} required
               className=' w-full p-3 outline-none font-sens text-gray-500 ' placeholder='Enter Email'/>
               </div>
 
               <div className='bg-white flex border my-2  overflow-hidden rounded-md'>
 
               <input type={Showpassword === true ? "text": "password"} value={password} onChange={(e)=>setPassword(e.target.value)}
-               className=' w-full p-3 outline-none font-sans text-gray-500' placeholder='Enter Password' />
+              required className=' w-full p-3 outline-none font-sans text-gray-500' placeholder='Enter Password' />
 
               <div className=' m-2'
               onMouseEnter={showPassword} onMouseLeave={hidePassword}   >

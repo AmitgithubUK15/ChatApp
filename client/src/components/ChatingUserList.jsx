@@ -29,12 +29,13 @@ useMemo(()=>{
   setNewMsg(null);
   setnewMsgVisible(null);
  }
+
   return (
     <div className='w-[440px] flex flex-col'>
       {Chat && Chat.ChatUserList.List.ConnectedUser.map((value)=>(
        <div key={value._id} onClick={Clearmsg} className={newmsg && newmsg.senderId === value._id ? 'order-first' : null}>
           {value._id !== S_UID._id ? 
-          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} >
+          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`}  >
             <div id='listcomponent' className=' py-5 border border-b-gray-300' >       
             <div className='flex'>
               <div className='w-20 '>

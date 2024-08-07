@@ -1,11 +1,16 @@
 import { gql, useMutation } from '@apollo/client';
-import React, { useMemo, useState } from 'react'
+import React, { Suspense, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../context/SocketProvider';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Hide_Msg_Notification } from '../redux/chatinguserlist/ChatList';
-import { logout } from '../redux/user/userSlice';
+import { Hide_Msg_Notification, HideImage_Sending_slide } from '../redux/chatinguserlist/ChatList';
+import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import Picker from 'emoji-picker-react';
+
+
+
+const FileSend = React.lazy(()=>import("./FileSend"))
+const FileReview = React.lazy(()=>import("./FileReview"))
 
 
 const SendMessage = gql`
@@ -28,6 +33,11 @@ mutation getmsgs($senderId:String!,$reciverID:String!){
    _id,
    senderId,
    msg,
+   FileMsg{
+      filename,
+      url,
+      type
+   }
    Time,
   }
   }
@@ -38,33 +48,37 @@ export default function ChatBox() {
   const {userId} = useParams();
   const [RequestforChat] = useMutation(SendMessage);
   const [GetUserMessages] = useMutation(GetMessage)
-  const {S_UID} = useSelector((state)=>state.user);
+  const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+  const {ShowImage_In_ChatBox} = useSelector((state)=>state.chat);
   const [inputvalue, setInputValue] = useState("");
   const socket = useSocket();
   const [MsgList,setMsgList] = useState()
   const dispatch = useDispatch();
   const [sendmsgData,setSendMsgData] = useState();
   const navigate = useNavigate();
-  const [logged,setLogged] =useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [Emoji,setEmoji] = useState()
+  const {file,showImage_sending_Slide} = useSelector((state)=>state.chat);
+  
 
+  // Session Expired msg and logout user
 
   useMemo(()=>{
-    if(logged){
-      alert(logged);
+    if(LogoutUser){
+      alert(LogoutUser);
       dispatch(logout())
       navigate("/login")
     }
-  },[logged])
+  },[LogoutUser])
   
+  // Get user message by server 
+
   async function getUsermsg(){
     setMsgList("")
     try {
      const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:userId}})
 
      if(data !== undefined){
-  
       setMsgList(data.GetUserMessages.messages);
 
       
@@ -72,7 +86,7 @@ export default function ChatBox() {
     } catch (error) {
       if(error){
             if(error.message === "Session Expired, please login"){
-              setLogged(error.message)
+              dispatch(SessionExpried_Logout(error.message))
              }
           }
           else{
@@ -81,11 +95,18 @@ export default function ChatBox() {
     }
   }
 
+  
+
+  // Get user message Notification
   useMemo(()=>{
     dispatch(Hide_Msg_Notification(userId))
     getUsermsg();
+    dispatch(HideImage_Sending_slide())
   },[userId])
 
+  
+  // set user messages in setMsglist state
+  
   useMemo(()=>{
     if(sendmsgData !== undefined){
       setTimeout(()=>{
@@ -97,6 +118,16 @@ export default function ChatBox() {
     }
  },[sendmsgData])
 
+
+  useMemo(()=>{
+     if(ShowImage_In_ChatBox){
+       setTimeout(()=>{
+        setMsgList((prev)=>[...prev,ShowImage_In_ChatBox])
+       },1000)
+     }
+  },[ShowImage_In_ChatBox])
+
+// Clear input value
  useMemo(()=>{
   if(inputvalue){
    setInputValue("");
@@ -106,6 +137,8 @@ export default function ChatBox() {
   }
 },[MsgList])
 
+
+// recive message using socket
  useMemo(()=>{
   if(socket){
    socket.on("chatmessage",(chat)=>{
@@ -120,6 +153,7 @@ export default function ChatBox() {
    })
   }
  },[socket])
+
 
   async function CreateMessage(e) {
     e.preventDefault();
@@ -147,7 +181,7 @@ export default function ChatBox() {
     } catch (error) {
       if(error){
         if(error.message === "Session Expired, please login"){
-          setLogged(error.message)
+          dispatch(SessionExpried_Logout(error.message))
          }
       }
       else{
@@ -171,22 +205,47 @@ export default function ChatBox() {
     let log = `${first[0]} : ${first[1]} ${split[1]}`;
     return log;   
   }
+
+  useMemo(()=>{
+    if(file === undefined || file ===null || file.length <=0){
+     dispatch(HideImage_Sending_slide());
+    }
+   },[file])
+
+
   return (
-    <div className='h-full overflow-hidden' >
-      <div className='flex flex-col h-full' >
+    <div className='h-full overflow-hidden flex flex-col' >
+      
+      {showImage_sending_Slide === false ? 
+      (<div className='flex flex-col h-full' >
         <div className=' h-full flex flex-col-reverse overflow-y-scroll overflow-x-hidden' id="ChatboxMainContainer" style={{scrollbarWidth:"thin" }}>
           <div className='flex'>
              <div style={{width:"100%" }} className='mx-5'>
+
              {MsgList && MsgList.map((value)=>(
               <div key={value._id} style={{width:"100%",margin:"35px 0"}} className={value.senderId === S_UID._id ? ` flex justify-end text-right` :` flex justify-start`} >
                 
                   <div style={{width:"50%"}}>
-                  <span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold  rounded-xl text-white`
+                  {value.msg !== "" ?
+                  (<span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold  rounded-xl text-white`
                     :`bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
                   }>{value.msg} 
                   <span className='font-normal  mx-1 text-[9px] '>{splittime(value.Time)}</span>
 
-                  </span>
+                  </span>)
+                  :
+                  (
+                  <div className={`flex flex-col gap-3 ${S_UID._id === value.senderId ? "items-end": "items-start"} `}>
+                     {value.FileMsg && value.FileMsg.map((image,i)=>(
+                      <div key={i} 
+                      className={`max-w-64  overflow-hidden rounded-lg px-1 py-2 ${S_UID._id === value.senderId ? "bg-purple-400": "bg-slate-300"}`}>
+                        <img src={image.url && image.url} alt={image.filename} className='max-w-[100%] rounded-md' />
+                        <p className={`font-normal  py-1 px-2 text-[11px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>{splittime(value.Time)}</p>
+                      </div>
+                     ))}
+                  </div>
+                  )
+                  }
                   </div>
               </div>
             ))}
@@ -199,8 +258,16 @@ export default function ChatBox() {
         <div className=' relative bottom-0'>
           <div className='w-full border bg-gray-300'>
 
-            <div className='my-2' >
-              <form onSubmit={CreateMessage}>
+            <div className='my-2 flex flex-col' >
+            
+              <div className='flex'>
+              <div>
+                    <Suspense >
+                    <FileSend />
+                    </Suspense>
+              </div>
+
+              <form onSubmit={CreateMessage} className='w-full'>
                 <div className='flex gap-5 mx-2'>
                   <div>
                   <button type='button' className='my-2' onClick={() => setShowPicker(!showPicker)}>
@@ -209,7 +276,7 @@ export default function ChatBox() {
                    
                   </div>
                   <div className='border-red-400 w-full'>
-                    <input type="text" className=' text-lg py-2 px-4 w-full rounded-xl outline-none border-none' placeholder='Type a message'
+                    <input type="text" required className=' text-lg py-2 px-4 w-full rounded-xl outline-none border-none' placeholder='Type a message'
                       value={inputvalue} onChange={(e) => setInputValue(e.target.value)}/>
                   </div>
                   <div className='w-14 border rounded-full' style={{ backgroundColor: "rgb(168 0 194)" }}>
@@ -222,6 +289,8 @@ export default function ChatBox() {
                 </div>
                
               </form>
+              </div>
+
               { showPicker === true? (
                <div style={{width:"100%", position: 'relative', top: '2px', left: '10px' }}>
                 <Picker height="450px" width="100%" value={Emoji} onEmojiClick={(e)=>setEmoji(e.emoji)} />
@@ -232,8 +301,15 @@ export default function ChatBox() {
           </div>
 
         </div>
-       
-      </div>
+      </div>)
+      :
+      ( <div className='bg-white flex flex-col h-full'>
+        <Suspense >
+          <FileReview />
+        </Suspense>
+       </div>)}
+
+     
     </div>
   )
 }

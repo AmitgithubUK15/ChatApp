@@ -6,8 +6,9 @@ const { InternalServerError } = require("../utils/error.js");
 
 async function AddUserForChat(args) {
 
+ 
 try {
-  const { senderId, reciverID, msg,Date,Time,Day } = args;
+  const { senderId, reciverID, msg,Date,Time,Day ,FileMsg} = args;
   const reciversocket = ActiveUserMap.get(args.reciverID);
 
   
@@ -20,10 +21,11 @@ try {
     senderId:senderId,
     reciverID:reciverID,
     msg:msg,
+    FileMsg:FileMsg,
     Date:Date,
     Time:Time,
     Day:Day
-  })
+  });
 
   await messages.save();
 
@@ -44,16 +46,17 @@ try {
 
   io.to(reciversocket).emit("chatmessage", {
     msg: messages.msg,
+    FileMsg:messages.FileMsg,
     senderId:messages.senderId,
     Time:messages.Time
   });
 
+
+  //   // for sender UserChatList
   
   const ChatListUsers = await Chatlist.findOne({
     user:senderId,
   })
-
-  // for sender
   if(!ChatListUsers){
     const createChatList = new Chatlist({
       user:senderId,
@@ -75,7 +78,7 @@ try {
   }
 
 
-  // for reciver
+  // for reciver UserChatList
   const ChatListforreciver = await Chatlist.findOne({
     user:reciverID,
   })

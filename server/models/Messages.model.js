@@ -11,7 +11,16 @@ const MessagesSchema = mongoose.Schema({
     },
     msg:{
         type:String,
-        required:true
+        default:"",
+    },
+    FileMsg:{
+        type:Array,
+        default:{
+            filename: "",
+            size: "",
+            type:"",
+            url:""
+        }
     },
     Date:{
      type:String,

@@ -1,10 +1,12 @@
-const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
+const { GraphQLObjectType, GraphQLString,GraphQLInputObjectType, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
 const { GoogleAuth,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
 const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg } = require('../controllers/Chat.controllers');
 
+
+// ObjectTypes
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -17,6 +19,27 @@ const UserType = new GraphQLObjectType({
     }
 });
 
+const FileMsg_Response_Type = new GraphQLInputObjectType({
+    name: 'FileMsg_Response',
+    fields:{
+        filename: {type:GraphQLString},
+        size: {type:GraphQLID},
+        type:{type:GraphQLString},
+        url:{type:GraphQLString}
+    }
+})
+
+const FileType = new GraphQLObjectType({
+    name: 'FileType',
+    fields:{
+        filename: {type:GraphQLString},
+        size: {type:GraphQLString},
+        type:{type:GraphQLString},
+        url:{type:GraphQLString}
+    }
+})
+
+
 const ChatMessageType = new GraphQLObjectType({
     name:'Chat',
     fields:{
@@ -24,6 +47,7 @@ const ChatMessageType = new GraphQLObjectType({
         senderId:{type:GraphQLString},
         reciverID:{type:GraphQLString},
         msg:{type:GraphQLString},
+        FileMsg:{type: GraphQLList(FileType)},
         Date:{type:GraphQLString},
         Time:{type:GraphQLString},
         Day:{type:GraphQLString}
@@ -57,6 +81,11 @@ const MessagesType = new GraphQLObjectType({
     }
 })
 
+
+
+
+// Query
+
 const QueryType = new GraphQLObjectType({
     name: 'Query',
     fields: {
@@ -78,6 +107,7 @@ const QueryType = new GraphQLObjectType({
     }
   });
 
+// Mutation
 
 const MutationType = new GraphQLObjectType({
     name:"Mutation",
@@ -144,7 +174,8 @@ const MutationType = new GraphQLObjectType({
             args:{
                 senderId:{type: new GraphQLNonNull(GraphQLString)},
                 reciverID:{type: new GraphQLNonNull(GraphQLString)},
-                msg:{type:new GraphQLNonNull(GraphQLString)},
+                msg:{type: GraphQLString},
+                FileMsg:{type:new  GraphQLList(FileMsg_Response_Type)},
                 Date:{type:new GraphQLNonNull(GraphQLString)},
                 Time:{type:new GraphQLNonNull(GraphQLString)},
                 Day:{type:new GraphQLNonNull(GraphQLString)}
@@ -166,6 +197,8 @@ const MutationType = new GraphQLObjectType({
     }
 })
 
+
+// setSchema
 
 const schema = new GraphQLSchema({
     query:QueryType,

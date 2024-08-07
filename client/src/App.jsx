@@ -10,7 +10,8 @@ const UserAccountList = React.lazy(() => import("./pages/UserAccountList"));
 const Account = React.lazy(() => import("./pages/Account"));
 const Setting = React.lazy(() => import("./pages/Setting"));
 const SideNav = React.lazy(()=>import("./components/SideNav"))
-const PrivateRoute = React.lazy(()=>import("./components/PrivateRoute"))
+const PrivateRoute = React.lazy(()=>import("./components/PrivateRoute"));
+
 
 function App() {
   const { S_UID } = useSelector((state) => state.user);

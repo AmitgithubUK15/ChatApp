@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
-import React, { useEffect, useMemo, useState } from 'react'
+import  { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
@@ -27,7 +27,6 @@ export default function SideNav() {
     useEffect(()=>{
         if(data){
           dispatch(Update_User_Chatlist(data));
-          
         }
       },[data])
 
@@ -42,7 +41,9 @@ export default function SideNav() {
     }
 
     useMemo(()=>{
-      console.log(error)
+      if(error){
+        console.log(error.message);
+      }
     },[error])
 
 
