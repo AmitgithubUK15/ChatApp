@@ -46,7 +46,9 @@ export default function FileSend() {
 
 
   async function submitFiles() {
+  
   if(uploadedFiles.length >0){
+    
     let imageSources = [];
     if(uploadedFiles.length > 0 && uploadedFiles.length <=6){
   

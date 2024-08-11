@@ -7,7 +7,12 @@ const initialState = {
     fileData:null,
     doc_file:null,
     showImage_sending_Slide: false,
-    ShowImage_In_ChatBox : null
+    ShowImage_In_ChatBox : null,
+    MsgSettingDropDown: false,
+    selectedmsg : null,
+    Selection_Check_Visible : false,
+    clear_checkMsgstate: null,
+    remove_msg_from_UI: false,
 }
 
 const ChatlistSlice = createSlice({
@@ -43,6 +48,30 @@ const ChatlistSlice = createSlice({
         },
         HideImageReview_Box_NotClear_ExitingValue : (state)=>{
             state.showImage_sending_Slide = false;
+        },
+        ShowMsgSettingDropDownBox : (state,action) =>{
+            state.MsgSettingDropDown = action.payload;
+        },
+        ShowCheckBoxs_Visiblity : (state,action)=>{
+            state.Selection_Check_Visible = action.payload;
+            state.selectedmsg = null;
+            if(!state.clear_checkMsgstate){
+                state.clear_checkMsgstate = true;
+            }
+            else{
+                state.clear_checkMsgstate = false;
+            }
+        },
+        Selected_Msgs: (state,action) => {
+            state.selectedmsg = action.payload;
+        },
+        remove_ui_msg: (state)=>{
+            if(!state.remove_msg_from_UI){
+                state.remove_msg_from_UI = true;
+            }
+            else{
+                state.remove_msg_from_UI = false;
+            }
         }
     }
 })
@@ -55,5 +84,9 @@ HideImage_Sending_slide,
 Send_Docs,
 Send_File_Data,
 FileShow_On_ChatBox,
-HideImageReview_Box_NotClear_ExitingValue}         = ChatlistSlice.actions;
+HideImageReview_Box_NotClear_ExitingValue,
+ShowMsgSettingDropDownBox,
+Selected_Msgs,
+ShowCheckBoxs_Visiblity,
+remove_ui_msg}         = ChatlistSlice.actions;
 export default ChatlistSlice.reducer;

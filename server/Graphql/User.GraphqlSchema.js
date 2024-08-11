@@ -3,7 +3,7 @@ const {buildSchema} = require("graphql");
 const { GoogleAuth,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg } = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase } = require('../controllers/Chat.controllers');
 
 
 // ObjectTypes
@@ -25,7 +25,7 @@ const FileMsg_Response_Type = new GraphQLInputObjectType({
         filename: {type:GraphQLString},
         size: {type:GraphQLID},
         type:{type:GraphQLString},
-        url:{type:GraphQLString}
+        url:{type:GraphQLString},
     }
 })
 
@@ -35,7 +35,7 @@ const FileType = new GraphQLObjectType({
         filename: {type:GraphQLString},
         size: {type:GraphQLString},
         type:{type:GraphQLString},
-        url:{type:GraphQLString}
+        url:{type:GraphQLString},
     }
 })
 
@@ -81,6 +81,12 @@ const MessagesType = new GraphQLObjectType({
     }
 })
 
+const DeleteMsgDetailsType = new GraphQLInputObjectType({
+    name:'DeleteMsgs',
+    fields:{
+        msg_id:{type: GraphQLList(GraphQLString)}
+    }
+})
 
 
 
@@ -192,6 +198,24 @@ const MutationType = new GraphQLObjectType({
                       extensions: { code: error.extensions && error.extensions.code || 'INTERNAL_SERVER_ERROR' }
                     });
                   }
+            }
+        },
+
+        DeleteUserMsg:{
+            type:ResponseType,
+            args:{
+                senderId:{type : new GraphQLNonNull(GraphQLString)},
+                reciverID:{type : new GraphQLNonNull(GraphQLString)},
+                msgsId:{type : DeleteMsgDetailsType},
+            },
+            resolve: async (parent,args,context)=>{
+                try {
+                    await restrictToLoggedinUserOnly(context);
+                    console.log(args);
+                    return deleteMsgFromDatabase(args)
+                } catch (error) {
+                    
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ const rootreducer = combineReducers({
 const persistConfig = {
     key:'root',
     storage,
+    blacklist: ['chat'],
 }
 
 const persisterReducer = persistReducer(persistConfig,rootreducer);

@@ -159,9 +159,43 @@ async function  Getusermsg(args){
   }
 }
 
+
+async function deleteMsgFromDatabase(args) {
+  const { senderId, reciverID, msgsId } = args;
+
+  try {
+
+      let deletemsg = await Messages.findOneAndDelete({
+          _id: {$in : msgsId.msg_id}
+      });
+ 
+    
+      if (deletemsg.deletedCount === 0) {
+          throw new InternalServerError("No messages were deleted");
+      }
+
+      //  Remove the deleted message IDs from the messages array in the Room collection
+      let deletemsgroom = await Room.findOneAndUpdate(
+          { Participant: { $all: [senderId, reciverID] } },
+          { $pull: { messages: { $in: msgsId.msg_id } } }, 
+          { new: true } 
+      );
+
+  
+      if (!deletemsgroom) throw new InternalServerError("Room not found");
+
+      return { msg: "Messages deleted successfully" };
+
+  } catch (error) {
+      throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
+
 module.exports = {
   AddUserForChat,
   CheckOnlineUser,
   ChatingUser,
-  Getusermsg
+  Getusermsg,
+  deleteMsgFromDatabase
 };

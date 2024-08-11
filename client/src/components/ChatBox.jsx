@@ -1,9 +1,9 @@
 import { gql, useMutation } from '@apollo/client';
-import React, { Suspense, useMemo, useState } from 'react'
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../context/SocketProvider';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Hide_Msg_Notification, HideImage_Sending_slide } from '../redux/chatinguserlist/ChatList';
+import { Hide_Msg_Notification, HideImage_Sending_slide, Selected_Msgs, ShowMsgSettingDropDownBox } from '../redux/chatinguserlist/ChatList';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import Picker from 'emoji-picker-react';
 
@@ -36,7 +36,8 @@ mutation getmsgs($senderId:String!,$reciverID:String!){
    FileMsg{
       filename,
       url,
-      type
+      type,
+      size
    }
    Time,
   }
@@ -49,7 +50,10 @@ export default function ChatBox() {
   const [RequestforChat] = useMutation(SendMessage);
   const [GetUserMessages] = useMutation(GetMessage)
   const {S_UID,LogoutUser} = useSelector((state)=>state.user);
-  const {ShowImage_In_ChatBox} = useSelector((state)=>state.chat);
+  const {file,ShowImage_In_ChatBox,Selection_Check_Visible,
+    showImage_sending_Slide,clear_checkMsgstate,remove_msg_from_UI} = useSelector((state)=>state.chat);
+  
+  
   const [inputvalue, setInputValue] = useState("");
   const socket = useSocket();
   const [MsgList,setMsgList] = useState()
@@ -58,7 +62,11 @@ export default function ChatBox() {
   const navigate = useNavigate();
   const [showPicker, setShowPicker] = useState(false);
   const [Emoji,setEmoji] = useState()
-  const {file,showImage_sending_Slide} = useSelector((state)=>state.chat);
+  const AnchorRef = useRef();
+  const [selectmsg_id,setSelectedMsg_id] = useState({
+    Messages_id:[],
+    filemsgs_details:[]
+  })
   
 
   // Session Expired msg and logout user
@@ -213,8 +221,52 @@ export default function ChatBox() {
    },[file])
 
 
+  //  download image 
+
+  async function downloadImage(fileUrlpath) {
+    try {
+      const response = await fetch(fileUrlpath);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      AnchorRef.current.href = url;
+      AnchorRef.current.download = fileUrlpath.split('/').pop(); // Extract the file name from the URL
+      AnchorRef.current.click(); // Programmatically trigger the download
+      URL.revokeObjectURL(url); // Clean up the object URL
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+    }
+  }
+  
+// clear selectedmsg_id state
+
+useEffect(()=>{
+  setSelectedMsg_id({
+    Messages_id:[],
+    filemsgs_details:[]
+  })
+},[clear_checkMsgstate])
+
+  // update selectedmsg state
+
+  useMemo(()=>{
+    if(selectmsg_id){
+      dispatch(Selected_Msgs(selectmsg_id))
+    }
+  },[selectmsg_id])
+
+  // remove msg from ui 
+
+  useMemo(()=>{
+    console.log(remove_msg_from_UI)
+    const filterarr =  MsgList&&  MsgList.filter((item)=> !selectmsg_id.Messages_id.includes(item._id));
+    setMsgList(filterarr);
+  },[remove_msg_from_UI])
+  
   return (
-    <div className='h-full overflow-hidden flex flex-col' >
+    <div className='h-full overflow-hidden flex flex-col' onClick={()=>dispatch(ShowMsgSettingDropDownBox(false))}>
       
       {showImage_sending_Slide === false ? 
       (<div className='flex flex-col h-full' >
@@ -225,7 +277,19 @@ export default function ChatBox() {
              {MsgList && MsgList.map((value)=>(
               <div key={value._id} style={{width:"100%",margin:"35px 0"}} className={value.senderId === S_UID._id ? ` flex justify-end text-right` :` flex justify-start`} >
                 
+               
                   <div style={{width:"50%"}}>
+
+                 {Selection_Check_Visible === true && 
+                   <div className=' bg-gray-200'>
+                   <input type="checkbox" 
+                   onChange={()=>setSelectedMsg_id({
+                    ...selectmsg_id, 
+                    Messages_id:selectmsg_id.Messages_id.concat(value._id), 
+                    filemsgs_details: selectmsg_id.filemsgs_details.concat(value.msg == "" ? value.FileMsg: null) 
+                    })}/>
+                   </div>}
+
                   {value.msg !== "" ?
                   (<span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold  rounded-xl text-white`
                     :`bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
@@ -236,11 +300,19 @@ export default function ChatBox() {
                   :
                   (
                   <div className={`flex flex-col gap-3 ${S_UID._id === value.senderId ? "items-end": "items-start"} `}>
-                     {value.FileMsg && value.FileMsg.map((image,i)=>(
+                     {value.FileMsg && value.FileMsg.map((files,i)=>(
                       <div key={i} 
                       className={`max-w-64  overflow-hidden rounded-lg px-1 py-2 ${S_UID._id === value.senderId ? "bg-purple-400": "bg-slate-300"}`}>
-                        <img src={image.url && image.url} alt={image.filename} className='max-w-[100%] rounded-md' />
-                        <p className={`font-normal  py-1 px-2 text-[11px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>{splittime(value.Time)}</p>
+                        {files.type === "video/mp4" ? 
+                         ( <video  className='max-w-[100%] rounded-md' controls>
+                            <source src={files.url && files.url} alt={files.filename}/>
+                           </video>)
+                        :
+                        ( <img src={files.url && files.url} alt={files.filename} loading='lazy' className='max-w-[100%] rounded-md' />)}
+                        <p className={`font-normal  py-1 px-2 text-[11px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>
+                           <a href="#" ref={AnchorRef} onClick={(e)=>{e.preventDefault();downloadImage(files.url)}}>Download</a>
+                          {splittime(value.Time)}
+                          </p>
                       </div>
                      ))}
                   </div>
