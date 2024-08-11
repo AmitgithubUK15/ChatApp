@@ -1,18 +1,62 @@
 import { Link } from 'react-router-dom';
-import { useSelector} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
+import { gql, useMutation } from '@apollo/client';
 
-
+const UserAccount = gql`
+mutation getusers($sender:String!){
+ ChatUserList(sender:$sender){
+  List{
+      ConnectedUser{
+          username,
+          _id,
+          email,
+          avatar
+      }
+  }
+ }
+}
+`
 
 export default function UserList() {
 const {S_UID} = useSelector((state)=>state.user);
 const {Chat} = useSelector((state)=>state.chat);
+const [ChatUserList ,{data,error}] = useMutation(UserAccount);
 const [newmsg ,setNewMsg] = useState();
 const [newmsgVisible ,setnewMsgVisible] = useState(null);
 const socket = useSocket();
 const {hideNotification} = useSelector((state)=> state.chat);
+const dispatch = useDispatch();
+
+
+    useEffect(()=>{
+        if(data){
+          dispatch(Update_User_Chatlist(data));
+        }
+      },[data])
+
+   
+    useMemo(()=>{
+      async function GetUserChatList(){
+        try {
+            await ChatUserList({variables:{sender:S_UID._id}})
+            
+          } catch (error) {
+            console.log(error.message);
+          }
+    }
+
+    GetUserChatList();
+    },[])
+
+    useMemo(()=>{
+      if(error){
+        console.log(error.message);
+      }
+    },[error])
 
 useMemo(()=>{
   if(socket){
@@ -36,7 +80,7 @@ useMemo(()=>{
        <div key={value._id} onClick={Clearmsg} className={newmsg && newmsg.senderId === value._id ? 'order-first' : null}>
           {value._id !== S_UID._id ? 
           (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`}  >
-            <div id='listcomponent' className=' py-5 border border-b-gray-300' >       
+            <div id='listcomponent' className=' py-5 hover:bg-gray-100 transition-colors duration-200 ease-linear' >       
             <div className='flex'>
               <div className='w-20 '>
                  <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>

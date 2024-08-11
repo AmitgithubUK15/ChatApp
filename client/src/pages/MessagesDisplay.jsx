@@ -15,7 +15,7 @@ export default function MessagesDisplay() {
     )
   :
   (
-    <div className=' w-[950px] h-full border overflow-hidden  flex justify-center items-center'>
+    <div className=' w-[950px] h-full  overflow-hidden  flex justify-center items-center'>
       <div className='w-[500px] h-[500px] ' >
     <img src="/images/Messaging-pana.svg" alt="" srcSet='/images/Messaging-pana.svg'/>
   </div>

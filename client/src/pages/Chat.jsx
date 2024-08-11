@@ -10,9 +10,9 @@ export default function Chat() {
 
 
   return (
-    <div >
+    <div>
       
-      <div style={{position:"absolute", top:"0"}}>
+      <div className='absolute'>
        <Suspense>
        <SearchBox />
        </Suspense>
@@ -20,7 +20,7 @@ export default function Chat() {
 
 
        <div className='flex ' style={{height:"100%"}}>
-       <div className=' mt-14'>
+       <div className='mt-14'>
           <div className='w-[450px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
             <Suspense >
             <ChatingUserList/>

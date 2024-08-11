@@ -26,12 +26,11 @@ export default function ChatingHeader() {
   const {S_UID} = useSelector((state)=>state.user);
   const {selectedmsg} = useSelector((state)=> state.chat);
   const {userId,username,profileImage}  = useParams();
-  const [CheckUserOnline,{error,data}] = useMutation(CheckUserOnlineOrNot);
+  const [CheckUserOnline,{data}] = useMutation(CheckUserOnlineOrNot);
   const [DeleteUserMsg] = useMutation(Deletemessages_Mutation);
   const [status,setStatus] = useState(null);
   const {MsgSettingDropDown,Selection_Check_Visible} = useSelector((state)=>state.chat);
   const dispatch = useDispatch();
-  const [deleteMsg_mutation_Res,setDel_msg_res] = useState()
   const [deletefile_firebase,setDeletefile_firebase] = useState(false);
 
   async function UserStatus(){
@@ -44,10 +43,9 @@ export default function ChatingHeader() {
 
   useEffect(()=>{
      UserStatus();
-     console.log(userId)
   },[userId])
 
- useMemo(()=>{
+  useMemo(()=>{
   setTimeout(()=>{
     if(data){
       setStatus(data.CheckUserOnline.msg)
@@ -56,7 +54,7 @@ export default function ChatingHeader() {
       return null;
     }
   },1000)
- },[data])
+  },[data])
 
 
 //  Show MsgSettingbox
@@ -108,7 +106,7 @@ async function Send_DeleteMsg_Details(){
 }
 
 
-// file deleting code in firebase 
+// file deleting code in fire base 
 
 useMemo(()=>{
   let fileArray =selectedmsg&&  selectedmsg.filemsgs_details.filter((item)=>item!==null);
@@ -156,7 +154,7 @@ useMemo(()=>{
 },[deletefile_firebase])
 
   return (
-    <div className='w-[950px]  border-l-gray-400 ' style={{backgroundColor:"rgb(168 0 194)"}}>
+    <div className='w-[950px] bg-white shadow-sm'>
        
 
     <div className='flex  py-2 w-full px-2'>
@@ -168,9 +166,9 @@ useMemo(()=>{
       </div>
       <div>
         <h1 className=''>
-          <span className=' text-white font-bold text-xl'>{username}</span>
+          <span className=' text-black font-bold text-xl'>{username}</span>
         </h1>
-        <p className='text-sm font-semibold font-sans'>{status === "true" ? "Online" :"Offline"}</p>
+        <p className='text-sm font-semibold font-sans text-green-400'>{status === "true" ? "Online" :"Offline"}</p>
       </div>
       </div>
 

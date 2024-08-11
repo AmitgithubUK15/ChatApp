@@ -118,7 +118,12 @@ export default function ChatBox() {
   useMemo(()=>{
     if(sendmsgData !== undefined){
       setTimeout(()=>{
-        setMsgList((prev)=>[...prev,sendmsgData && sendmsgData.RequestforChat.ChatMsg]);
+        if(MsgList.length ===0){
+          setMsgList([sendmsgData && sendmsgData.RequestforChat.ChatMsg]);
+        }
+        else{
+          setMsgList((prev)=>[...prev,sendmsgData && sendmsgData.RequestforChat.ChatMsg]);
+        }
       },1000)
     }
     else {
@@ -207,6 +212,7 @@ export default function ChatBox() {
   },[Emoji])
 
   function splittime(time){
+   
     let split = time.split(' ');
 
     let first = split[0].split(':');
@@ -260,7 +266,6 @@ useEffect(()=>{
   // remove msg from ui 
 
   useMemo(()=>{
-    console.log(remove_msg_from_UI)
     const filterarr =  MsgList&&  MsgList.filter((item)=> !selectmsg_id.Messages_id.includes(item._id));
     setMsgList(filterarr);
   },[remove_msg_from_UI])
@@ -269,7 +274,7 @@ useEffect(()=>{
     <div className='h-full overflow-hidden flex flex-col' onClick={()=>dispatch(ShowMsgSettingDropDownBox(false))}>
       
       {showImage_sending_Slide === false ? 
-      (<div className='flex flex-col h-full' >
+      (<div className='flex flex-col h-full' style={{backgroundColor:"#f5f5f5"}}>
         <div className=' h-full flex flex-col-reverse overflow-y-scroll overflow-x-hidden' id="ChatboxMainContainer" style={{scrollbarWidth:"thin" }}>
           <div className='flex'>
              <div style={{width:"100%" }} className='mx-5'>

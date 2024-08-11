@@ -12,7 +12,7 @@ export default function UserAccountList() {
   return (
     <div >
       
-      <div style={{position:"absolute", top:"0"}}>
+      <div className='absolute' >
        <Suspense>
        <SearchBox />
        </Suspense>
