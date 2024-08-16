@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate,  } from 'react-router-dom';
 import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
+import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
+import { checkedUser_adding } from '../redux/chatinguserlist/checkedUserslice';
 
 const UserAccount = gql`
 mutation getusers($sender:String!){
@@ -22,30 +24,53 @@ mutation getusers($sender:String!){
 `
 
 export default function UserList() {
-const {S_UID} = useSelector((state)=>state.user);
+const {S_UID,LogoutUser} = useSelector((state)=>state.user);
 const {Chat} = useSelector((state)=>state.chat);
+const {checkUser,checkedUserId} = useSelector((state)=> state.checkeduser)
 const [ChatUserList ,{data,error}] = useMutation(UserAccount);
 const [newmsg ,setNewMsg] = useState();
-const [newmsgVisible ,setnewMsgVisible] = useState(null);
+const [newmsgVisible,setnewMsgVisible] = useState(null);
 const socket = useSocket();
-const {hideNotification} = useSelector((state)=> state.chat);
+const {hideNotification,ShowcheckBox_userlist} = useSelector((state)=> state.chat);
 const dispatch = useDispatch();
+const navigate = useNavigate();
+const [CheckedUser ,setCheckedUser] = useState([]);
 
 
-    useEffect(()=>{
+ 
+  // Session Expired msg and logout user
+
+  useMemo(()=>{
+    if(LogoutUser){
+      alert(LogoutUser);
+      dispatch(logout())
+      navigate("/login")
+    }
+  },[LogoutUser])
+
+
+  // store in state
+  useEffect(()=>{
         if(data){
-          dispatch(Update_User_Chatlist(data));
+          dispatch(Update_User_Chatlist(data.ChatUserList.List.ConnectedUser));
         }
-      },[data])
+  },[data])
 
-   
-    useMemo(()=>{
+  
+    useEffect(()=>{
       async function GetUserChatList(){
         try {
             await ChatUserList({variables:{sender:S_UID._id}})
             
           } catch (error) {
-            console.log(error.message);
+            if(error){
+              if(error.message === "Session Expired, please login"){
+                dispatch(SessionExpried_Logout(error.message))
+               }
+            }
+            else{
+              console.log(error.message);
+            }
           }
     }
 
@@ -74,13 +99,31 @@ useMemo(()=>{
   setnewMsgVisible(null);
  }
 
-  return (
-    <div className='w-[440px] flex flex-col'>
-      {Chat && Chat.ChatUserList.List.ConnectedUser.map((value)=>(
-       <div key={value._id} onClick={Clearmsg} className={newmsg && newmsg.senderId === value._id ? 'order-first' : null}>
+//  clear previous checked users
+useEffect(()=>{
+  if(ShowcheckBox_userlist){
+    dispatch(checkedUser_adding([]))
+  }
+  else{
+    dispatch(checkedUser_adding([]))
+  }
+},[ShowcheckBox_userlist])
+
+
+
+
+  return ( 
+    <div className='w-[440px] flex flex-col' style={{}}>
+      {Chat && Chat.map((value)=>(
+       <div key={value._id} onClick={Clearmsg} 
+       className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} flex  ${ShowcheckBox_userlist ? "hover:bg-red-100" :"hover:bg-gray-100"} transition-colors duration-200 ease-linear` } >
+
+        
+
           {value._id !== S_UID._id ? 
-          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`}  >
-            <div id='listcomponent' className=' py-5 hover:bg-gray-100 transition-colors duration-200 ease-linear' >       
+          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} className='block w-[90%]' >
+            
+            <div id='listcomponent' className='  py-5  transition-colors duration-200 ease-linear' >       
             <div className='flex'>
               <div className='w-20 '>
                  <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
@@ -124,6 +167,11 @@ useMemo(()=>{
          </Link>)
          :
          null}
+
+        {ShowcheckBox_userlist &&  
+        <div className='text-right  h-[96px] px-3 py-4'  >
+           <input type="checkbox" value={[S_UID._id,value._id]} onChange={(e)=> dispatch(checkedUser_adding(e.target.value))}/>
+          </div> }
         </div>
       ))}
     </div>

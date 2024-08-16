@@ -1,14 +1,21 @@
 
 // import UserList from '../components/UserList'
 // import SearchBox from '../components/SearchBox'
-import React, {  Suspense} from 'react'
+import React, {  Suspense, useEffect} from 'react'
 import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
+import { useDispatch } from 'react-redux'
+import { ShowChatingList_dropdown } from '../redux/chatinguserlist/ChatList'
 
 const SearchBox = React.lazy(()=>import("../components/SearchBox"))
 const UserList = React.lazy(()=>import("../components/UserList"))
 
 export default function UserAccountList() {
+  const dispatch = useDispatch();
+
+useEffect(()=>{
+dispatch(ShowChatingList_dropdown(false))
+},[])
   return (
     <div >
       

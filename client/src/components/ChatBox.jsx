@@ -81,33 +81,34 @@ export default function ChatBox() {
   
   // Get user message by server 
 
-  async function getUsermsg(){
-    setMsgList("")
-    try {
-     const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:userId}})
 
-     if(data !== undefined){
-      setMsgList(data.GetUserMessages.messages);
-
-      
-     }
-    } catch (error) {
-      if(error){
-            if(error.message === "Session Expired, please login"){
-              dispatch(SessionExpried_Logout(error.message))
-             }
-          }
-          else{
-            console.log(error.message);
-          }
-    }
-  }
 
   
 
   // Get user message Notification
-  useMemo(()=>{
+  useEffect(()=>{
     dispatch(Hide_Msg_Notification(userId))
+    async function getUsermsg(){
+      setMsgList("")
+      try {
+       const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:userId}})
+  
+       if(data !== undefined){
+        setMsgList(data.GetUserMessages.messages);
+  
+        
+       }
+      } catch (error) {
+        if(error){
+              if(error.message === "Session Expired, please login"){
+                dispatch(SessionExpried_Logout(error.message))
+               }
+            }
+            else{
+              console.log(error.message);
+            }
+      }
+    }
     getUsermsg();
     dispatch(HideImage_Sending_slide())
   },[userId])
@@ -156,6 +157,7 @@ export default function ChatBox() {
   if(socket){
    socket.on("chatmessage",(chat)=>{
      if(chat.senderId === userId){
+      console.log(userId)
       setTimeout(()=>{
          setMsgList((prev)=>[...prev,chat])
        },1000)
@@ -286,7 +288,7 @@ useEffect(()=>{
                   <div style={{width:"50%"}}>
 
                  {Selection_Check_Visible === true && 
-                   <div className=' bg-gray-200'>
+                   <div className={`absolute w-[449px] h-[40px] px-2 py-2 ${value.senderId === S_UID._id? "text-left": "text-right" }` } style={{backgroundColor:"#d4d4d48f"}}>
                    <input type="checkbox" 
                    onChange={()=>setSelectedMsg_id({
                     ...selectmsg_id, 

@@ -3,7 +3,7 @@ const {buildSchema} = require("graphql");
 const { GoogleAuth,GetAllUser,Signin } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase } = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat } = require('../controllers/Chat.controllers');
 
 
 // ObjectTypes
@@ -88,6 +88,15 @@ const DeleteMsgDetailsType = new GraphQLInputObjectType({
     }
 })
 
+// Delete chat users
+
+const DeleteChatUsers = new GraphQLInputObjectType({
+    name:'Deletechatuser',
+    fields:{
+        chat_id:{type : GraphQLList(GraphQLList(GraphQLString))},
+        users_id:{type : GraphQLList(GraphQLString)}
+    }
+})
 
 
 // Query
@@ -211,11 +220,23 @@ const MutationType = new GraphQLObjectType({
             resolve: async (parent,args,context)=>{
                 try {
                     await restrictToLoggedinUserOnly(context);
-                    console.log(args);
+                
                     return deleteMsgFromDatabase(args)
                 } catch (error) {
                     
                 }
+            }
+        },
+
+        DeleteChatingUsers:{
+            type:ResponseType,
+            args:{
+               req_details:{type : DeleteChatUsers}
+            },
+            resolve: async (parent,args,context)=>{
+                await restrictToLoggedinUserOnly(context);
+                
+                return DeleteUser_InChat(args)
             }
         }
     }

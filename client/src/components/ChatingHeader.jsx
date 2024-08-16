@@ -173,12 +173,12 @@ useMemo(()=>{
       </div>
 
       <div className='text-right w-1/2 '>
-         <button className='text-2xl text-white font-bold mx-3' onClick={ShowMsgsettingsBox}>:</button>
+         <button className='text-2xl text-black font-bold mx-3' onClick={ShowMsgsettingsBox}>:</button>
 
         {MsgSettingDropDown && 
-         <div className='w-[29rem] px-2 absolute top-16  flex flex-row-reverse z-10'>
+         <div className='w-[29rem] px-2 absolute top-24  flex flex-row-reverse z-10'>
 
-         <div className='w-64 p-2 rounded bg-gray-300 text-left font-semibold'>
+         <div className='w-64 p-2 rounded bg-gray-200 text-left font-semibold'>
 
          <div 
          className=' py-4 text-lg px-2 rounded hover:bg-gray-400 hover:text-white cursor-pointer' >

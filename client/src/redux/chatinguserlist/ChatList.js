@@ -13,6 +13,8 @@ const initialState = {
     Selection_Check_Visible : false,
     clear_checkMsgstate: null,
     remove_msg_from_UI: false,
+    Chating_user_setting_dropdown: false,
+    ShowcheckBox_userlist :false,
 }
 
 const ChatlistSlice = createSlice({
@@ -72,6 +74,14 @@ const ChatlistSlice = createSlice({
             else{
                 state.remove_msg_from_UI = false;
             }
+        },
+        ShowChatingList_dropdown: (state,action)=>{
+            state.Chating_user_setting_dropdown = action.payload;
+        },
+
+        SelectUser:(state,action)=>{
+            state.ShowcheckBox_userlist = action.payload;
+            state.Chating_user_setting_dropdown = false;
         }
     }
 })
@@ -88,5 +98,8 @@ HideImageReview_Box_NotClear_ExitingValue,
 ShowMsgSettingDropDownBox,
 Selected_Msgs,
 ShowCheckBoxs_Visiblity,
-remove_ui_msg}         = ChatlistSlice.actions;
+remove_ui_msg,
+ShowChatingList_dropdown,
+SelectUser
+}         = ChatlistSlice.actions;
 export default ChatlistSlice.reducer;

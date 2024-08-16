@@ -192,10 +192,93 @@ async function deleteMsgFromDatabase(args) {
 }
 
 
+async function DeleteUser_InChat(args){
+ const {req_details} = args;
+
+ try {
+
+  DeleteUser_ChatList(req_details.chat_id[0][0],req_details.users_id);
+  let Message_id = [];
+  
+  for(let i=0; i<req_details.chat_id.length; i++){
+    let userroom = await Room.findOne({
+      Participant: {$all : [req_details.chat_id[i][0],req_details.chat_id[i][1]]}
+    })
+
+    if(userroom){
+     let concat =   Message_id.concat(userroom.messages);
+     Message_id = concat;
+    }
+  }
+
+   const deleteusers = await Room.deleteMany({
+    Participant: {$in : req_details.chat_id}
+   })
+
+   if(!deleteusers) throw new InternalServerError("Room not found");
+
+   const delete_msgs = await Messages.deleteMany({
+     _id :{ $in : Message_id}
+    })
+    
+    if(!delete_msgs) throw new InternalServerError("Message not deleted");
+    
+    
+
+   return {msg:"deleted successfully"};
+ } catch (error) {
+  throw new InternalServerError(error.message || "Internal server error");
+ }
+}  
+
+
+async function DeleteUser_ChatList(senderId, userIds) {
+  try {
+      // Step 1: Find the user in the Chatlist
+      const findUser = await Chatlist.findOne({ user: senderId });
+      if (!findUser) {
+        throw new InternalServerError("Not found user in Chatlist ");
+      }
+
+      // Step 2: Get the current list of connected users
+      let chatinglist = findUser.ConnectedUser;
+   
+      // let newList = null;
+      // Step 3: Remove each userId from the connected users list
+      for (let i = 0; i < userIds.length; i++) {
+        chatinglist = chatinglist.filter((item) => item.toString() !== userIds[i].toString());
+      }
+
+    
+
+      // Step 4: Update the Chatlist document with the new connected users list
+      const updateUser = await Chatlist.findOneAndUpdate(
+          { user: senderId },
+          {
+              $set: {
+                  ConnectedUser: chatinglist
+              }
+          },
+          { new: true } // Return the updated document
+      );
+
+      console.log(updateUser);
+      if (!updateUser) {
+        throw new InternalServerError('Failed to update user');
+      }
+
+      return 'Work completed successfully';
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
+
 module.exports = {
   AddUserForChat,
   CheckOnlineUser,
   ChatingUser,
   Getusermsg,
-  deleteMsgFromDatabase
+  deleteMsgFromDatabase,
+  DeleteUser_InChat,
 };
