@@ -35,6 +35,7 @@ const {hideNotification,ShowcheckBox_userlist} = useSelector((state)=> state.cha
 const dispatch = useDispatch();
 const navigate = useNavigate();
 const [CheckedUser ,setCheckedUser] = useState([]);
+const {searchquery} = useSelector((state)=>state.searching);
 
 
  
@@ -116,7 +117,13 @@ useEffect(()=>{
     <div className='w-[440px] flex flex-col' style={{}}>
       {Chat && Chat.map((value)=>(
        <div key={value._id} onClick={Clearmsg} 
-       className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} flex  ${ShowcheckBox_userlist ? "hover:bg-red-100" :"hover:bg-gray-100"} transition-colors duration-200 ease-linear` } >
+       className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} 
+       flex  
+       ${ShowcheckBox_userlist ? "hover:bg-red-100" :"hover:bg-gray-100"} 
+       transition-colors duration-200 ease-linear
+       ${value.username.includes(`${searchquery}`) || value.email.includes(`${searchquery}`)   ?'order-first': 'bg-transparent' }
+       ` 
+       } >
 
         
 

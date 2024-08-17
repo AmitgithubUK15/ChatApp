@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { SelectUser, ShowChatingList_dropdown, Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
+import { search } from '../redux/SearchUser/searchuserSlice';
 
 const DeleteChat_gql = gql`
 mutation deletechat ($req_details:Deletechatuser){
@@ -70,8 +71,9 @@ export default function SearchBox() {
        <div className='flex justify-around'>
          <form action="" className='py-3'>
           <div className=' w-80 mx-auto  flex rounded-lg  ' style={{backgroundColor:"rgb(168 0 194)"}}>
-            <input type="text" className='p-2 w-full outline-none border-b' placeholder='Search by Name, Email'/>
-            <button className='outline-none border-none p-2  text-white'>Search</button>
+
+            <input type="text"  onChange={(e)=>dispatch(search(e.target.value))}
+            className='p-2 w-full outline-none border-b border-purple-500 italic' placeholder='Search by Name, Email'/>
           </div>
          </form>
          <div className='text-center cursor-pointer' onClick={ShowDropDown}>

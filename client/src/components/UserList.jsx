@@ -20,6 +20,8 @@ export default function UserList() {
   const {data,error} = useQuery(UserAccount);
   const [userdata,setUserdata] = useState()
   const {S_UID} = useSelector((state)=> state.user);
+  const {searchquery} = useSelector((state)=>state.searching);
+
   useMemo(()=>{
     if(data){
       setUserdata(data)
@@ -32,9 +34,11 @@ export default function UserList() {
   }
   
   return (
-    <div className='w-[440px] '>
+    <div className='w-[440px] flex flex-col'>
       {userdata && userdata.users.map((value)=>(
-       <div key={value._id} >
+       <div key={value._id} 
+       className={`${value.username.includes(`${searchquery}`) || value.email.includes(`${searchquery}`) ?'order-first': 'bg-transparent' }`}>
+
           {value._id !== S_UID._id ? 
           (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} >
             <div id='listcomponent' className=' py-5 hover:bg-gray-100 transition-colors duration-200 ease-linear' >       
