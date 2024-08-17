@@ -157,7 +157,6 @@ export default function ChatBox() {
   if(socket){
    socket.on("chatmessage",(chat)=>{
      if(chat.senderId === userId){
-      console.log(userId)
       setTimeout(()=>{
          setMsgList((prev)=>[...prev,chat])
        },1000)

@@ -67,10 +67,9 @@ export default function SearchBox() {
   return (
     <div className='w-[450px] bg-white  border-b'  >
        
-
        <div className='flex justify-around'>
          <form action="" className='py-3'>
-          <div className=' w-80 mx-auto  flex rounded-lg   ' style={{backgroundColor:"rgb(168 0 194)"}}>
+          <div className=' w-80 mx-auto  flex rounded-lg  ' style={{backgroundColor:"rgb(168 0 194)"}}>
             <input type="text" className='p-2 w-full outline-none border-b' placeholder='Search by Name, Email'/>
             <button className='outline-none border-none p-2  text-white'>Search</button>
           </div>

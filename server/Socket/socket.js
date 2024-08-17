@@ -26,6 +26,10 @@ io.on('connection' ,(socket)=>{
 
   ActiveUserMap.set(userid,socket.id)
 
+  socket.on("client-disconnect",(data)=>{
+    ActiveUserMap.delete(`${data.userId}`)
+  })
+
   socket.on('disconnect',(socket)=>{
       console.log(`disconnect`)
   })

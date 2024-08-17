@@ -4,6 +4,7 @@ import {  useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import "./index.css"
 import { logout } from '../redux/user/userSlice';
+import { useSocket } from '../context/SocketProvider';
 
 
 
@@ -13,8 +14,11 @@ export default function SideNav() {
     const {S_UID} = useSelector((state)=>state.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const socket = useSocket();
     
     function  HandleLogout(){
+      socket.emit("client-disconnect", {userId: S_UID._id})
+      socket.disconnect();
       dispatch(logout())
       localStorage.clear();
       navigate("/login")
