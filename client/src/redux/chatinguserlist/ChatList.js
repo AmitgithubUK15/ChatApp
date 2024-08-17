@@ -59,9 +59,11 @@ const ChatlistSlice = createSlice({
             state.selectedmsg = null;
             if(!state.clear_checkMsgstate){
                 state.clear_checkMsgstate = true;
+                state.MsgSettingDropDown = false
             }
             else{
                 state.clear_checkMsgstate = false;
+                state.MsgSettingDropDown = false;
             }
         },
         Selected_Msgs: (state,action) => {
@@ -70,9 +72,13 @@ const ChatlistSlice = createSlice({
         remove_ui_msg: (state)=>{
             if(!state.remove_msg_from_UI){
                 state.remove_msg_from_UI = true;
+                state.MsgSettingDropDown = false;
+                state.Selection_Check_Visible = false;
             }
             else{
                 state.remove_msg_from_UI = false;
+                state.MsgSettingDropDown = false;
+                state.Selection_Check_Visible = false;
             }
         },
         ShowChatingList_dropdown: (state,action)=>{

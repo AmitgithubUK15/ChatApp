@@ -76,7 +76,7 @@ function ShowMsgsettingsBox(){
 function show_Checkbox_onMessages(){
   if(!Selection_Check_Visible){
     dispatch(ShowCheckBoxs_Visiblity(true))
-  } 
+  }
   else{
     dispatch(ShowCheckBoxs_Visiblity(false))
   }
@@ -95,7 +95,6 @@ async function Send_DeleteMsg_Details(){
   let {data} = await DeleteUserMsg({variables:{senderId:S_UID._id,reciverID:userId,msgsId:deletemsgobject}})
   
   if(data){
-    console.log(data);
     setDeletefile_firebase(!deletefile_firebase ? true : false)
   }
 

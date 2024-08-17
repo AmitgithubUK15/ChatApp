@@ -285,10 +285,14 @@ useEffect(()=>{
               <div key={value._id} style={{width:"100%",margin:"35px 0"}} className={value.senderId === S_UID._id ? ` flex justify-end text-right` :` flex justify-start`} >
                 
                
-                  <div style={{width:"50%"}}>
+                  <div 
+                  className={`
+                  ${Selection_Check_Visible === true ? "flex p-3 rounded-lg": null } 
+                  ${value.senderId === S_UID._id ? "justify-between":null}`} 
+                  style={{width:"50%", backgroundColor:`${Selection_Check_Visible === true ? "#7b57fb4a": "transparent"}`}}>
 
                  {Selection_Check_Visible === true && 
-                   <div className={`absolute w-[449px] h-[40px] px-2 py-2 ${value.senderId === S_UID._id? "text-left": "text-right" }` } style={{backgroundColor:"#d4d4d48f"}}>
+                   <div className={` mx-2 h-[40px] px-2 py-2 ${value.senderId === S_UID._id? "text-left": "text-right" }` } >
                    <input type="checkbox" 
                    onChange={()=>setSelectedMsg_id({
                     ...selectmsg_id, 
@@ -298,7 +302,7 @@ useEffect(()=>{
                    </div>}
 
                   {value.msg !== "" ?
-                  (<span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold  rounded-xl text-white`
+                  (<span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
                     :`bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
                   }>{value.msg} 
                   <span className='font-normal  mx-1 text-[9px] '>{splittime(value.Time)}</span>
