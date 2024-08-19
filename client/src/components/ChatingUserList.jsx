@@ -16,7 +16,12 @@ mutation getusers($sender:String!){
           username,
           _id,
           email,
-          avatar
+          avatar{
+          filename,
+          size,
+          type,
+          url
+          }
       }
   }
  }
@@ -114,7 +119,7 @@ useEffect(()=>{
 
 
   return ( 
-    <div className='w-[440px] flex flex-col' style={{}}>
+    <div className='w-[417px] flex flex-col' style={{}}>
       {Chat && Chat.map((value)=>(
        <div key={value._id} onClick={Clearmsg} 
        className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} 
@@ -134,7 +139,7 @@ useEffect(()=>{
             <div className='flex'>
               <div className='w-20 '>
                  <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
-                  <img src={`${value.avatar}`} alt="" />
+                  <img src={`${value.avatar.url}`} alt="" />
                  </div>
               </div>
               <div>

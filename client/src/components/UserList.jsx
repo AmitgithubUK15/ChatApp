@@ -10,7 +10,9 @@ const UserAccount = gql`
   users {
   _id,
    username,
-   avatar,
+   avatar{
+   url
+   }
    email,
   }
  }
@@ -34,18 +36,18 @@ export default function UserList() {
   }
   
   return (
-    <div className='w-[440px] flex flex-col'>
+    <div className='w-[417px] flex flex-col'>
       {userdata && userdata.users.map((value)=>(
        <div key={value._id} 
        className={`${value.username.includes(`${searchquery}`) || value.email.includes(`${searchquery}`) ?'order-first': 'bg-transparent' }`}>
 
           {value._id !== S_UID._id ? 
-          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} >
+          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar.url)}`} >
             <div id='listcomponent' className=' py-5 hover:bg-gray-100 transition-colors duration-200 ease-linear' >       
             <div className='flex'>
               <div className='w-20 '>
                  <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
-                  <img src={`${value.avatar}`} alt="" />
+                  <img src={`${value.avatar.url}`} alt="" />
                  </div>
               </div>
               <div>

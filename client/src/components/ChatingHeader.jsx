@@ -153,7 +153,7 @@ useMemo(()=>{
 },[deletefile_firebase])
 
   return (
-    <div className='w-[950px] bg-white shadow-sm'>
+    <div className='w-[780px] bg-white shadow-sm'>
        
 
     <div className='flex  py-2 w-full px-2'>
@@ -175,22 +175,22 @@ useMemo(()=>{
          <button className='text-2xl text-black font-bold mx-3' onClick={ShowMsgsettingsBox}>:</button>
 
         {MsgSettingDropDown && 
-         <div className='w-[29rem] px-2 absolute top-24  flex flex-row-reverse z-10'>
+         <div className='w-[24rem] px-2 absolute top-24  flex flex-row-reverse z-10'>
 
-         <div className='w-64 p-2 rounded bg-gray-200 text-left font-semibold'>
+         <div className=' w-44 p-2 rounded bg-gray-200 text-left '>
 
          <div 
-         className=' py-4 text-lg px-2 rounded hover:bg-gray-400 hover:text-white cursor-pointer' >
+         className=' py-3 text-md px-2 rounded hover:bg-gray-400  cursor-pointer transition-colors  duration-200 ease-linear' >
             Message Info
           </div>
 
          <div 
-         className=' py-4 text-lg px-2 rounded hover:bg-gray-400 hover:text-white cursor-pointer'
+         className=' py-3 text-md px-2 rounded hover:bg-gray-400  cursor-pointer transition-colors duration-200 ease-linear'
          onClick={show_Checkbox_onMessages}
          > Select message
           </div>
          <div onClick={Send_DeleteMsg_Details}
-          className=' py-4 text-lg px-2 rounded hover:bg-gray-400 hover:text-white cursor-pointer'
+          className=' py-3 text-md px-2 rounded hover:bg-gray-400 cursor-pointer transition-colors  duration-200 ease-linear'
          >
           Delete message
          </div>

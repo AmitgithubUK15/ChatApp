@@ -8,7 +8,6 @@ const Login = React.lazy(() => import("./pages/Login"));
 const Chat = React.lazy(() => import("./pages/Chat"));
 const UserAccountList = React.lazy(() => import("./pages/UserAccountList"));
 const Account = React.lazy(() => import("./pages/Account"));
-const Setting = React.lazy(() => import("./pages/Setting"));
 const SideNav = React.lazy(()=>import("./components/SideNav"))
 const PrivateRoute = React.lazy(()=>import("./components/PrivateRoute"));
 
@@ -46,9 +45,6 @@ function App() {
             </Suspense>} />
             <Route path="/account" element={<Suspense >
               <Account />
-            </Suspense>} />
-            <Route path="/settings" element={<Suspense >
-              <Setting />
             </Suspense>} />
           </Route>
         </Routes>

@@ -5,15 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { useMemo } from 'react';
 import { loginSuccess } from '../redux/user/userSlice';
+import { setUserDetails } from '../redux/user/userRelatedDetails';
 
 const Login_Google = gql`
- mutation Login($username:String!,$email:String!,$avatar:String!){
+ mutation Login($username:String!,$email:String!,$avatar:FileMsg_Response){
 Googlelogin(username:$username,email:$email,avatar:$avatar){
  msg,
  candidate{
  _id
  username,
- avatar,
+ avatar{
+ filename,
+ size,
+ type,
+ url
+ }
  },
  token
 }
@@ -28,8 +34,11 @@ export default function GoogleAuth() {
 
   useMemo(()=>{
      if(data){
+      console.log(data);
         alert(data.Googlelogin.msg);
-        dispatch(loginSuccess(data.Googlelogin.candidate))
+         navigate("/rooms")
+         dispatch(loginSuccess({_id:data.Googlelogin.candidate._id}))
+         dispatch(setUserDetails(data.Googlelogin.candidate))
         localStorage.setItem("S_ID",data.Googlelogin.token);
         navigate("/rooms")
      }
@@ -41,8 +50,14 @@ export default function GoogleAuth() {
         const auth = getAuth(app);
 
         const result = await signInWithPopup(auth,provider);
-        
-        await Googlelogin({variables:{username:result.user.displayName,email:result.user.email,avatar:result.user.photoURL}})
+
+        let profile = {
+          filename:"",
+          size:"",
+          type:"",
+          url:result.user.photoURL
+        }
+        await Googlelogin({variables:{username:result.user.displayName,email:result.user.email,avatar:profile}})
     } catch (error) {
         console.log(error.message);
     }

@@ -12,6 +12,7 @@ import { useSocket } from '../context/SocketProvider';
 export default function SideNav() {
     
     const {S_UID} = useSelector((state)=>state.user);
+    const {currentuser} = useSelector((state)=>state.userdetails);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const socket = useSocket();
@@ -21,7 +22,7 @@ export default function SideNav() {
       socket.disconnect();
       dispatch(logout())
       localStorage.clear();
-      navigate("/login")
+      navigate("/login");
     }
 
 
@@ -29,9 +30,9 @@ export default function SideNav() {
     <div className=' w-20 h-full  bg-white ' >
         <div className='flex flex-col m-2 gap-6'>
             <Link to="/account">
-            <div >
+            <div title='Profile'>
                 <div className='mx-auto  w-12 h-12 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={`${S_UID && S_UID.avatar}`} alt=""  />
+                   <img src={`${currentuser && currentuser.avatar.url}`} alt=""  />
                 </div>
             </div>
             </Link>

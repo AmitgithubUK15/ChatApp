@@ -28,7 +28,7 @@ dispatch(SelectUser(false))
 
        <div className='flex ' style={{height:"100%"}}>
        <div className='mt-16'>
-          <div className='w-[450px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
+          <div className='w-[417px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
             <Suspense >
             <ChatingUserList/>
             </Suspense>

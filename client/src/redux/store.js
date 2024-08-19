@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import ChatList from './chatinguserlist/ChatList';
 import checkedUserslice from './chatinguserlist/checkedUserslice';
 import searchuserSlice from './SearchUser/searchuserSlice';
+import userRelatedDetails from './user/userRelatedDetails';
 
 
 const rootreducer = combineReducers({
@@ -12,12 +13,13 @@ const rootreducer = combineReducers({
     chat:ChatList,
     checkeduser: checkedUserslice,
     searching: searchuserSlice,
+    userdetails:userRelatedDetails,
 })
 
 const persistConfig = {
     key:'root',
     storage,
-    blacklist: ['chat','checkeduser','searching'],
+    blacklist: ['chat','checkeduser','searching','userdetails'],
 }
 
 const persisterReducer = persistReducer(persistConfig,rootreducer);

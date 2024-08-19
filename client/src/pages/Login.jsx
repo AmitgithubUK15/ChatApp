@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../redux/user/userSlice';
 import GoogleAuth from '../components/GoogleAuth';
+import { setUserDetails } from '../redux/user/userRelatedDetails';
 
 
 const LOGIN_USER = gql`
@@ -15,7 +16,13 @@ signinUser(email:$email,password:$password){
  candidate{
  _id
  username,
- avatar,
+ avatar{
+ filename,
+ size,
+ type,
+ url
+ }
+ email
  },
  token
 }
@@ -51,7 +58,8 @@ export default function Login() {
         setEmail('')
       setPassword('')
       alert(data.signinUser.msg);
-      Dispatch(loginSuccess(data.signinUser.candidate))
+      Dispatch(loginSuccess({_id:data.signinUser.candidate._id}))
+      Dispatch(setUserDetails(data.signinUser.candidate))
       localStorage.setItem("S_ID",data.signinUser.token);
       navigate("/rooms")
        }

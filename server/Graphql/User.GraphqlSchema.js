@@ -1,6 +1,6 @@
 const { GraphQLObjectType, GraphQLString,GraphQLInputObjectType, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
-const { GoogleAuth,GetAllUser,Signin } = require('../controllers/User.controllers');
+const { GoogleAuth,GetAllUser,Signin, SignupUser } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
 const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat } = require('../controllers/Chat.controllers');
@@ -8,16 +8,9 @@ const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDa
 
 // ObjectTypes
 
-const UserType = new GraphQLObjectType({
-    name:'User',
-    fields:{
-        _id:{type:GraphQLString},
-        username:{type:GraphQLString},
-        email:{type:GraphQLString},
-        password:{type:GraphQLString},
-        avatar:{type:GraphQLString},
-    }
-});
+
+
+
 
 const FileMsg_Response_Type = new GraphQLInputObjectType({
     name: 'FileMsg_Response',
@@ -39,6 +32,16 @@ const FileType = new GraphQLObjectType({
     }
 })
 
+const UserType = new GraphQLObjectType({
+    name:'User',
+    fields:{
+        _id:{type:GraphQLString},
+        username:{type:GraphQLString},
+        email:{type:GraphQLString},
+        password:{type:GraphQLString},
+        avatar:{type:FileType},
+    }
+});
 
 const ChatMessageType = new GraphQLObjectType({
     name:'Chat',
@@ -132,10 +135,22 @@ const MutationType = new GraphQLObjectType({
             args:{
                 username: { type: new GraphQLNonNull(GraphQLString) },
                 email: { type: new GraphQLNonNull(GraphQLString) },
-                avatar: {type: new GraphQLNonNull(GraphQLString)}
+                avatar: {type: FileMsg_Response_Type}
             },
             resolve: (parent,args,context)=>{
+                console.log(args);
                 return GoogleAuth(args);
+            }
+        },
+        createUser:{
+            type:ResponseType,
+            args:{
+                username: { type: new GraphQLNonNull(GraphQLString) },
+                email: { type: new GraphQLNonNull(GraphQLString) },
+                password: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: (parent,args,context)=>{
+                return SignupUser(args);
             }
         },
 

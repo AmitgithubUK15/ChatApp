@@ -14,12 +14,13 @@ async function GoogleAuth(req){
      if(user){
       const token = setUser(user);
       const {password: pass,...rest} = user._doc;
-
+      
       return {msg:"Login successfull",candidate:rest,token:token};
      }
      else{
       const GeneratePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
       const hashedpassword = await bcrypt.hash(GeneratePassword,8);
+      console.log("in controller")
       const newUser = await User({
         username:req.username,
         email:req.email,
@@ -42,27 +43,27 @@ async function GoogleAuth(req){
 }
 
 
-// async function SignupUser(req,next){
+async function SignupUser(req,next){
 
-//   const hashpassword = await bcrypt.hash(req.password,8);
-//   try {
-//     const user = await User({
-//      username:req.username,
-//      email:req.email,
-//      password:hashpassword
-//     })
+  const hashpassword = await bcrypt.hash(req.password,8);
+  try {
+    const user = await User({
+     username:req.username,
+     email:req.email,
+     password:hashpassword
+    })
 
-//     const process = await user.save();
+    const process = await user.save();
 
-//     if(!process) throw new InternalServerError("User not created");
+    if(!process) throw new InternalServerError("User not created");
     
-//     const {password:pass, ...rest} = user._doc;
-//     return {msg:"User created successfully",candidate:rest};
-//   } catch (error) {
+    const {password:pass, ...rest} = user._doc;
+    return {msg:"User created successfully",candidate:rest};
+  } catch (error) {
    
-//     throw new InternalServerError(error.message || "Internal server error");
-//   }
-// }
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
 
 
 async function GetAllUser(){
@@ -110,5 +111,6 @@ async function Signin(req,res){
 module.exports = {
     GoogleAuth,
     GetAllUser,
-    Signin
+    Signin,
+    SignupUser
 }

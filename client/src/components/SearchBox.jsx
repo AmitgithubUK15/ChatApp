@@ -66,7 +66,7 @@ export default function SearchBox() {
 
 
   return (
-    <div className='w-[450px] bg-white  border-b'  >
+    <div className='w-[417px] bg-white  border-b'  >
        
        <div className='flex justify-around'>
          <form action="" className='py-3'>
@@ -83,16 +83,16 @@ export default function SearchBox() {
          </div>
        </div>
        {Chating_user_setting_dropdown && 
-         <div className='w-[27rem] px-2 absolute top-16  flex flex-row-reverse z-10'>
+         <div className='w-[25rem] px-2 absolute top-16  flex flex-row-reverse z-10'>
 
-         <div className='w-48 p-2 rounded bg-gray-100 text-left font-semibold'>
+         <div className='w-44 p-2 rounded bg-gray-100 text-left '>
          <div 
-         className=' py-4 text-lg px-2 rounded hover:bg-gray-200 hover:text-white cursor-pointer'
+         className=' py-3 text-md px-2 rounded hover:bg-gray-200  cursor-pointer transition-colors  duration-200 ease-linear'
          onClick={HandleSelect}
          > Select
           </div>
          <div onClick={Delete_Chat_Users}
-          className=' py-4 text-lg px-2 rounded hover:bg-gray-200 hover:text-white cursor-pointer'
+          className=' py-3 text-md px-2 rounded hover:bg-gray-200  cursor-pointer transition-colors  duration-200 ease-linear'
          >
           Delete User
          </div>

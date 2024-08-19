@@ -28,7 +28,7 @@ dispatch(ShowChatingList_dropdown(false))
 
        <div className='flex ' style={{height:"100%"}}>
        <div className=' mt-14'>
-          <div className='w-[450px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
+          <div className='w-[417px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
             <Suspense >
             <UserList/>
             </Suspense>
