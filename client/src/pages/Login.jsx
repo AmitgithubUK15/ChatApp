@@ -22,7 +22,8 @@ signinUser(email:$email,password:$password){
  type,
  url
  }
- email
+ email,
+ about
  },
  token
 }

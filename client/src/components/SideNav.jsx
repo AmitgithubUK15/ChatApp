@@ -32,7 +32,7 @@ export default function SideNav() {
             <Link to="/account">
             <div title='Profile'>
                 <div className='mx-auto  w-12 h-12 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={`${currentuser && currentuser.avatar.url}`} alt=""  />
+                   <img src={`${currentuser && currentuser.avatar.url}`} alt="" className='w-full h-full' />
                 </div>
             </div>
             </Link>

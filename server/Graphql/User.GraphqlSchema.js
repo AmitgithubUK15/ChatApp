@@ -1,9 +1,9 @@
 const { GraphQLObjectType, GraphQLString,GraphQLInputObjectType, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
-const { GoogleAuth,GetAllUser,Signin, SignupUser } = require('../controllers/User.controllers');
+const { GoogleAuth,GetAllUser,Signin, SignupUser, updateprofile_pic, Update_userName, update_user_about } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat } = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat} = require('../controllers/Chat.controllers');
 
 
 // ObjectTypes
@@ -40,6 +40,7 @@ const UserType = new GraphQLObjectType({
         email:{type:GraphQLString},
         password:{type:GraphQLString},
         avatar:{type:FileType},
+        about:{type :GraphQLString}
     }
 });
 
@@ -101,6 +102,15 @@ const DeleteChatUsers = new GraphQLInputObjectType({
     }
 })
 
+// update pofile image
+
+const ProfileUpdatetype = new GraphQLInputObjectType({
+    name:"PorfileUpdate",
+    fields:{
+        user_id:{type:GraphQLString},
+        image:{type:FileMsg_Response_Type}
+    }
+})
 
 // Query
 
@@ -123,7 +133,7 @@ const QueryType = new GraphQLObjectType({
         }
       }
     }
-  });
+});
 
 // Mutation
 
@@ -138,7 +148,6 @@ const MutationType = new GraphQLObjectType({
                 avatar: {type: FileMsg_Response_Type}
             },
             resolve: (parent,args,context)=>{
-                console.log(args);
                 return GoogleAuth(args);
             }
         },
@@ -253,7 +262,47 @@ const MutationType = new GraphQLObjectType({
                 
                 return DeleteUser_InChat(args)
             }
+        },
+
+        updateUserProfile:{
+            type:ResponseType,
+            args:{
+                req_details:{type: ProfileUpdatetype}
+            },
+            resolve: async (prevent,args,context)=>{
+                await restrictToLoggedinUserOnly(context);
+
+                return updateprofile_pic(args);
+            }
+        },
+
+        updateUserName : {
+            type:ResponseType,
+            args:{
+                user_id:{type : new GraphQLNonNull(GraphQLString)},
+                updated_name : {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve :async (parent,args,context) => {
+                await restrictToLoggedinUserOnly(context);
+
+                return Update_userName(args);
+            }
+        },
+
+        updateUser_about:{
+            type:ResponseType,
+            args:{
+                user_id:{type : new GraphQLNonNull(GraphQLString)},
+                updated_about : {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve: async (parent,args,context) => {
+
+                await restrictToLoggedinUserOnly(context);
+                
+                return update_user_about(args);
+            }
         }
+
     }
 })
 

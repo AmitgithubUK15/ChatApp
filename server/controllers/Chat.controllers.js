@@ -1,6 +1,7 @@
 const Chatlist = require("../models/ChatList.model.js");
 const Messages = require("../models/Messages.model.js");
 const Room = require("../models/Room");
+const User = require("../models/User.model.js");
 const { io, ActiveUserMap } = require("../Socket/socket");
 const { InternalServerError } = require("../utils/error.js");
 
@@ -272,6 +273,7 @@ async function DeleteUser_ChatList(senderId, userIds) {
     throw new InternalServerError(error.message || "Internal server error");
   }
 }
+
 
 
 module.exports = {

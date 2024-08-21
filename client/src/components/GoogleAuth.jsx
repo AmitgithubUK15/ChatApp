@@ -19,7 +19,8 @@ Googlelogin(username:$username,email:$email,avatar:$avatar){
  size,
  type,
  url
- }
+ },
+ about
  },
  token
 }

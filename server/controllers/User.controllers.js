@@ -106,11 +106,85 @@ async function Signin(req,res){
 }
 
 
+async function updateprofile_pic(req){
+  const {req_details} = req;
 
+  try {
+
+    // const finduser = await User.findOne({_id:req_details.user_id});
+    const FindUserandUpdate = await User.findOneAndUpdate(
+      {_id:req_details.user_id},
+      {$set: {avatar: req_details.image}},
+      {new:true}
+    )
+     
+    if(!FindUserandUpdate)  throw new InternalServerError('Failed to update profile');
+
+    const {password:pass,...rest} = FindUserandUpdate._doc;
+  
+    return {msg:"Profile update successfully",candidate:rest}
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
+
+async function Update_userName(args){
+  const {user_id,updated_name} = args;
+  
+  try {
+     const FindUserandUpdate = await User.findOneAndUpdate(
+      {_id:user_id},
+      {
+        $set:{
+          username:updated_name
+        }
+      },
+      {new:true},
+    )
+
+    if(!FindUserandUpdate)  throw new InternalServerError('Failed to update username');
+
+    const {password:pass,...rest} = FindUserandUpdate._doc;
+  
+    return {msg:"Username update successfully",candidate:rest};
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
+
+async function update_user_about(args){
+  const {user_id,updated_about} = args;
+  
+  
+  try {
+     const FindUserandUpdate = await User.findOneAndUpdate(
+      {_id:user_id},
+      {
+        $set:{
+          about:updated_about
+        }
+      },
+      {new:true},
+    )
+
+    if(!FindUserandUpdate)  throw new InternalServerError('Failed to update about');
+
+    const {password:pass,...rest} = FindUserandUpdate._doc;
+  
+    return {msg:"User About update successfully",candidate:rest};
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
 
 module.exports = {
     GoogleAuth,
     GetAllUser,
     Signin,
-    SignupUser
+    SignupUser,
+    updateprofile_pic,
+    Update_userName,
+    update_user_about
 }

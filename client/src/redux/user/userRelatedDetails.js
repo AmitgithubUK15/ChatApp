@@ -11,7 +11,7 @@ const userDetails = createSlice({
         setUserDetails: (state,action)=>{
             state.currentuser = action.payload;
         }
-    }
+    }   
 })
 
 export const {setUserDetails} = userDetails.actions;
