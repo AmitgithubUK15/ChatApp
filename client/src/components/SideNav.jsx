@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import "./index.css"
 import { logout } from '../redux/user/userSlice';
 import { useSocket } from '../context/SocketProvider';
+import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
 
 
 
@@ -22,22 +23,25 @@ export default function SideNav() {
       socket.disconnect();
       dispatch(logout())
       localStorage.clear();
+      dispatch(setCurrentUser(null));
       navigate("/login");
     }
 
-
+   function ResetCurrentChatingUser(){
+    dispatch(setCurrentUser(null));
+   }
   return (
     <div className=' w-20 h-full  bg-white ' >
         <div className='flex flex-col m-2 gap-6'>
             <Link to="/account">
             <div title='Profile'>
                 <div className='mx-auto  w-12 h-12 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={`${currentuser && currentuser.avatar.url}`} alt="" className='w-full h-full' />
+                   <img src={`${currentuser && currentuser.avatar.url}`} alt="" className='w-full h-full bg-gray-300' />
                 </div>
             </div>
             </Link>
           
-           <Link to="/rooms">
+           <Link  to="/rooms">
            <div title='Messages'>
                 <div className='mx-auto  w-14 h-14 rounded-3xl   overflow-hidden'>
                    <img src="/images/message.png" alt=""  width={40}  className='mx-auto my-2' />
@@ -45,7 +49,7 @@ export default function SideNav() {
             </div>
            </Link>
           
-            <Link to="/Adduser">
+            <Link onClick={ResetCurrentChatingUser} to="/Adduser">
             <div title='Adduser'>
                 <div className='mx-auto  w-12 h-12 rounded-3xl    overflow-hidden'>
                    <img src="/images/addchat.png" alt=""  />
@@ -54,7 +58,7 @@ export default function SideNav() {
             </Link>
             
             
-            <div title='Logout' onClick={HandleLogout} className=' cursor-pointer'>
+            <div  title='Logout' onClick={HandleLogout} className=' cursor-pointer'>
                 <div className='mx-auto  w-12 h-12 rounded-3xl   overflow-hidden'>
                    <img src="/images/logout.png" alt="" width={40}  className='mx-auto my-2' />
                 </div>

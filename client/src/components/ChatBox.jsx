@@ -46,10 +46,12 @@ mutation getmsgs($senderId:String!,$reciverID:String!){
 `
 
 export default function ChatBox() {
-  const {userId} = useParams();
+  // const {userId} = useParams();
   const [RequestforChat] = useMutation(SendMessage);
   const [GetUserMessages] = useMutation(GetMessage)
+
   const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+  const {currentuser} = useSelector((state)=>state.currentchatuser);
   const {file,ShowImage_In_ChatBox,Selection_Check_Visible,
     showImage_sending_Slide,clear_checkMsgstate,remove_msg_from_UI} = useSelector((state)=>state.chat);
   
@@ -65,7 +67,7 @@ export default function ChatBox() {
   const AnchorRef = useRef();
   const [selectmsg_id,setSelectedMsg_id] = useState({
     Messages_id:[],
-    filemsgs_details:[]
+    filemsgs_details:[],
   })
   
 
@@ -87,11 +89,11 @@ export default function ChatBox() {
 
   // Get user message Notification
   useEffect(()=>{
-    dispatch(Hide_Msg_Notification(userId))
+    dispatch(Hide_Msg_Notification(currentuser.userId))
     async function getUsermsg(){
       setMsgList("")
       try {
-       const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:userId}})
+       const {data} =  await GetUserMessages({variables:{senderId:S_UID._id,reciverID:currentuser.userId}})
   
        if(data !== undefined){
         setMsgList(data.GetUserMessages.messages);
@@ -111,7 +113,7 @@ export default function ChatBox() {
     }
     getUsermsg();
     dispatch(HideImage_Sending_slide())
-  },[userId])
+  },[currentuser])
 
   
   // set user messages in setMsglist state
@@ -156,7 +158,7 @@ export default function ChatBox() {
  useMemo(()=>{
   if(socket){
    socket.on("chatmessage",(chat)=>{
-     if(chat.senderId === userId){
+     if(chat.senderId === currentuser.userId){
       setTimeout(()=>{
          setMsgList((prev)=>[...prev,chat])
        },1000)
@@ -179,7 +181,7 @@ export default function ChatBox() {
         {variables:
           {
           senderId:S_UID._id,
-          reciverID:userId,
+          reciverID:currentuser.userId,
           msg:inputvalue,
           Date:Currentdate.toLocaleDateString(),
           Time:Currentdate.toLocaleTimeString(),
@@ -252,7 +254,7 @@ export default function ChatBox() {
 useEffect(()=>{
   setSelectedMsg_id({
     Messages_id:[],
-    filemsgs_details:[]
+    filemsgs_details:[],
   })
 },[clear_checkMsgstate])
 

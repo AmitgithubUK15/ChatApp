@@ -275,6 +275,20 @@ async function DeleteUser_ChatList(senderId, userIds) {
 }
 
 
+async function getMessageDetail(args){
+  const {message_id} = args;
+  
+  try {
+    const findOneMessage = Messages.findById(message_id);
+
+    if(!findOneMessage) throw new InternalServerError('Failed to find message info');
+    
+    return findOneMessage;
+  } catch (error) {
+    throw new InternalServerError(error.message || "Internal server error");
+  }
+}
+
 
 module.exports = {
   AddUserForChat,
@@ -283,4 +297,5 @@ module.exports = {
   Getusermsg,
   deleteMsgFromDatabase,
   DeleteUser_InChat,
+  getMessageDetail
 };

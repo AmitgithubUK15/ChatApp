@@ -2,11 +2,12 @@ import { Link, useNavigate,  } from 'react-router-dom';
 import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo,useState } from 'react';
 import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import { checkedUser_adding } from '../redux/chatinguserlist/checkedUserslice';
+import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
 
 const UserAccount = gql`
 mutation getusers($sender:String!){
@@ -42,6 +43,12 @@ const navigate = useNavigate();
 const [CheckedUser ,setCheckedUser] = useState([]);
 const {searchquery} = useSelector((state)=>state.searching);
 
+
+
+ function Navigatetochatuser(userId,username,useravatar,email){
+  dispatch(setCurrentUser({userId,username,useravatar,email}))
+  navigate("/message");
+ }
 
  
   // Session Expired msg and logout user
@@ -83,16 +90,15 @@ const {searchquery} = useSelector((state)=>state.searching);
     GetUserChatList();
     },[])
 
-    useMemo(()=>{
-      if(error){
-        console.log(error.message);
-      }
-    },[error])
+    // useMemo(()=>{
+    //   if(error){
+    //     console.log(error.message);
+    //   }
+    // },[error])
 
-useMemo(()=>{
+  useMemo(()=>{
   if(socket){
    socket.on("chatmessage",(chat)=>{
-    console.log(chat);
       setTimeout(()=>{
          setNewMsg(chat)
        },1000)
@@ -133,13 +139,17 @@ useEffect(()=>{
         
 
           {value._id !== S_UID._id ? 
-          (  <Link to={`message/${value._id}/${value.username}/${encodeURIComponent(value.avatar)}`} className='block w-[90%]' >
+          (  <Link 
+            onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email)} 
+          to={`message`}
+           className='block w-[90%]'>
             
-            <div id='listcomponent' className='  py-5  transition-colors duration-200 ease-linear' >       
+            <div id='listcomponent'
+             className='  py-5  transition-colors duration-200 ease-linear' >       
             <div className='flex'>
               <div className='w-20 '>
-                 <div className=' w-14 mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
-                  <img src={`${value.avatar.url}`} alt="" />
+                 <div className=' w-14 h-14  shadow-md mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
+                  <img src={`${value.avatar.url}`} alt="" className='w-full h-full' />
                  </div>
               </div>
               <div>
@@ -147,15 +157,18 @@ useEffect(()=>{
                   <h1><span className=' font-bold'>{value.username}</span></h1>
                 </div>
                  
-                 {hideNotification === value._id ? 
-                 null
-                :  (newmsg && newmsg.senderId === value._id?
-                  ( <div>
-                    <p>{newmsg && newmsg.senderId === value._id ? newmsg.msg : null}</p>
-                  </div>)
-                  : null
-                   )
-                  }
+                    {hideNotification === value._id ?
+                      null
+                      :
+                      (newmsg && newmsg.senderId === value._id ?
+                        (
+                          <div>
+                            <p>{newmsg && newmsg.senderId === value._id ? newmsg.msg : null}</p>
+                          </div>
+                        )
+                        : null
+                      )
+                    }
 
               </div>
 
@@ -164,7 +177,7 @@ useEffect(()=>{
               : 
               (newmsg && newmsg.senderId === value._id ? 
                 (<div className=' ml-auto' style={{width: "64px",height: "26px"}}>
-                 <p className='bg-purple-600 text-white'
+                 <p className='bg-purple-600 text-white shadow-lg'
                    style={{
                      padding: " 0px 7px",
                      width: "25px",

@@ -66,14 +66,14 @@ export default function SearchBox() {
 
 
   return (
-    <div className='w-[417px] bg-white  border-b'  >
+    <div className='w-[417px] bg-white  '  >
        
        <div className='flex justify-around'>
          <form action="" className='py-3'>
           <div className=' w-80 mx-auto  flex rounded-lg  ' style={{backgroundColor:"rgb(168 0 194)"}}>
 
             <input type="text"  onChange={(e)=>dispatch(search(e.target.value))}
-            className='p-2 w-full outline-none border-b border-purple-500 italic' placeholder='Search by Name, Email'/>
+            className='p-2 w-full outline-none border-b-2 border-purple-500' placeholder='Search by Name, Email'/>
           </div>
          </form>
          <div className='text-center cursor-pointer' onClick={ShowDropDown}>

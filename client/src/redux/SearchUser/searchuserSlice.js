@@ -9,7 +9,6 @@ const serachusersSlice = createSlice({
     initialState,
     reducers:{
         search:(state,action)=>{
-            console.log(state.searchquery)
             state.searchquery = action.payload;
         }
     }

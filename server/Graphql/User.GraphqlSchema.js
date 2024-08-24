@@ -3,7 +3,7 @@ const {buildSchema} = require("graphql");
 const { GoogleAuth,GetAllUser,Signin, SignupUser, updateprofile_pic, Update_userName, update_user_about } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
-const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat} = require('../controllers/Chat.controllers');
+const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat, getMessageDetail} = require('../controllers/Chat.controllers');
 
 
 // ObjectTypes
@@ -300,6 +300,20 @@ const MutationType = new GraphQLObjectType({
                 await restrictToLoggedinUserOnly(context);
                 
                 return update_user_about(args);
+            }
+        },
+
+
+
+        GiveMessageInfo: {
+            type:ChatMessageType,
+            args:{
+                message_id:{type : new GraphQLNonNull(GraphQLString)},
+            },
+            resolve: async (parent,args,context) =>{
+                // await restrictToLoggedinUserOnly(context);
+
+                return getMessageDetail(args);
             }
         }
 

@@ -7,7 +7,7 @@ import app from '../firebase';
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import './index.css'
 import { gql, useMutation } from '@apollo/client';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 
 
@@ -34,7 +34,8 @@ mutation Msgsend($senderId:String!,$reciverID:String!,$msg:String!,$Date:String!
 export default function FileReview() {
   const [RequestforChat,{loading}] = useMutation(SendMessage);
   const {S_UID,LogoutUser} = useSelector((state)=>state.user);
-  const {userId} = useParams();
+  const {currentuser} = useSelector((state)=>state.currentchatuser);
+
   const {file_url_for_review,doc_file,fileData} = useSelector((state)=>state.chat);
   const [Imageindex,setImageIndex] = useState(null);
   const [DeleteImageIndex ,setDeleteImageIndex] = useState(getNullableType);
@@ -169,7 +170,7 @@ async function CreateMessage() {
       {variables:
         {
         senderId:S_UID._id,
-        reciverID:userId,
+        reciverID:currentuser.userId,
         msg:"",
         FileMsg:fileUrl,
         Date:Currentdate.toLocaleDateString(),

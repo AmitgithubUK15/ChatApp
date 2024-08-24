@@ -42,7 +42,7 @@ dispatch(ShowChatingList_dropdown(false))
             <MessagesDisplay />
           </Suspense>
         }  />
-        <Route path={`message/:userId/:username/:profileImage`} element={
+        <Route path={`message`} element={
           <Suspense fallback={<div>Loading...</div>}>
             <MessagesDisplay />
           </Suspense>

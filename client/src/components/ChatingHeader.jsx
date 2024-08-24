@@ -1,10 +1,10 @@
 import { gql, useMutation } from '@apollo/client';
 import  { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom'
-import {  remove_ui_msg, ShowCheckBoxs_Visiblity, ShowMsgSettingDropDownBox } from '../redux/chatinguserlist/ChatList';
+import {  remove_ui_msg, Selected_Msgs, ShowCheckBoxs_Visiblity, ShowMsgSettingDropDownBox } from '../redux/chatinguserlist/ChatList';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import app from '../firebase';
+import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice';
 
 const CheckUserOnlineOrNot = gql`
 mutation check($user_id:String!){
@@ -25,7 +25,10 @@ const Deletemessages_Mutation = gql`
 export default function ChatingHeader() {
   const {S_UID} = useSelector((state)=>state.user);
   const {selectedmsg} = useSelector((state)=> state.chat);
-  const {userId,username,profileImage}  = useParams();
+  const {currentuser} = useSelector((state)=>state.currentchatuser);
+
+  // const {userId,username,profileImage}  = useParams();
+
   const [CheckUserOnline,{data}] = useMutation(CheckUserOnlineOrNot);
   const [DeleteUserMsg] = useMutation(Deletemessages_Mutation);
   const [status,setStatus] = useState(null);
@@ -33,9 +36,10 @@ export default function ChatingHeader() {
   const dispatch = useDispatch();
   const [deletefile_firebase,setDeletefile_firebase] = useState(false);
 
+
   async function UserStatus(){
      try {
-       await CheckUserOnline({variables:{user_id:userId}})
+       await CheckUserOnline({variables:{user_id:currentuser.userId}})
      } catch (error) {
        console.log(error.message)
      }
@@ -43,7 +47,7 @@ export default function ChatingHeader() {
 
   useEffect(()=>{
      UserStatus();
-  },[userId])
+  },[currentuser])
 
   useMemo(()=>{
   setTimeout(()=>{
@@ -92,7 +96,7 @@ async function Send_DeleteMsg_Details(){
     msg_id:selectedmsg.Messages_id,
   }
   
-  let {data} = await DeleteUserMsg({variables:{senderId:S_UID._id,reciverID:userId,msgsId:deletemsgobject}})
+  let {data} = await DeleteUserMsg({variables:{senderId:S_UID._id,reciverID:currentuser.userId,msgsId:deletemsgobject}})
   
   if(data){
     setDeletefile_firebase(!deletefile_firebase ? true : false)
@@ -114,14 +118,13 @@ useMemo(()=>{
   }
   else{
      if (fileArray.length>0) {
-      console.log(selectedmsg.filemsgs_details)
       // Reference to the file in Firebase Storage
       const storage = getStorage(app);
       const fileRef = [];
 
        for (let i =0; i<selectedmsg.filemsgs_details.length; i++){
         const file = ref(storage,selectedmsg.filemsgs_details[i].filename);
-        console.log('work on fileref')
+       
         fileRef.push(file);
       }
 
@@ -129,18 +132,6 @@ useMemo(()=>{
       let promises = [];
 
       for(let i=0; i<fileRef.length; i++){
-        // const deletefile = // Delete the file
-        // deleteObject(fileRef[i])
-        //  .then(() => {
-        //    console.log("File delete successfully")
-        //    // setMessage('File deleted successfully');
-        //  })
-        //  .catch((error) => {
-        //    console.log("hee")
-        //    console.error('Error deleting file:', error);
-        //    // setMessage('Error deleting file');
-        //  });
-      
          promises.push(deleteObject(fileRef[i]));
       }
       
@@ -152,6 +143,28 @@ useMemo(()=>{
   }
 },[deletefile_firebase])
 
+
+// handle show_message_Info function 
+
+function show_message_Info(){
+  console.log(selectedmsg);
+  if(selectedmsg.Messages_id.length > 0 && selectedmsg.Messages_id.length <=1){
+    dispatch(showMsgInfo())
+    dispatch(ShowMsgSettingDropDownBox(false))
+  }
+  else{
+    alert("Please select 1 message to check message information.")
+    let clearSelectmsg = {
+      Messages_id:[],
+      filemsgs_details:[]
+    }
+    dispatch(ShowCheckBoxs_Visiblity(false))
+    dispatch(Selected_Msgs(clearSelectmsg))
+    dispatch(ShowMsgSettingDropDownBox(false))
+
+  }
+}
+
   return (
     <div className='w-[780px] bg-white shadow-sm'>
        
@@ -159,13 +172,13 @@ useMemo(()=>{
     <div className='flex  py-2 w-full px-2'>
       <div className='w-1/2 flex gap-3 '>
       <div>
-      <div className='mx-auto  w-10 h-10 rounded-3xl  shadow-md overflow-hidden'>
-                   <img src={`${profileImage && profileImage}`} alt=""  />
-                </div>
+      <div className='mx-auto  w-10 h-10  rounded-full  shadow-md overflow-hidden'>
+                  <img src={`${currentuser && currentuser.useravatar.url}`} alt=""  className='w-full h-full' />
+            </div>
       </div>
       <div>
         <h1 className=''>
-          <span className=' text-black font-bold text-xl'>{username}</span>
+          <span className=' text-black font-bold text-xl'>{currentuser && currentuser.username}</span>
         </h1>
         <p className='text-sm font-semibold font-sans text-green-400'>{status === "true" ? "Online" :"Offline"}</p>
       </div>
@@ -179,7 +192,7 @@ useMemo(()=>{
 
          <div className=' w-44 p-2 rounded bg-gray-200 text-left '>
 
-         <div 
+         <div onClick={show_message_Info}
          className=' py-3 text-md px-2 rounded hover:bg-gray-400  cursor-pointer transition-colors  duration-200 ease-linear' >
             Message Info
           </div>

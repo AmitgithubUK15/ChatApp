@@ -3,9 +3,10 @@ import { Route, Routes,  } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
 import { useDispatch } from 'react-redux'
 import { SelectUser, ShowChatingList_dropdown } from '../redux/chatinguserlist/ChatList'
+import SearchBox from '../components/SearchBox'
 
 
-const SearchBox = React.lazy(()=>import("../components/SearchBox"))
+// const SearchBox = React.lazy(()=>import("../components/SearchBox"))
 const ChatingUserList = React.lazy(()=>import("../components/ChatingUserList"))
 
 export default function Chat() {
@@ -20,9 +21,9 @@ dispatch(SelectUser(false))
     <div>
       
       <div className='absolute'>
-       <Suspense>
+       {/* <Suspense> */}
        <SearchBox />
-       </Suspense>
+       {/* </Suspense> */}
       </div>
 
 
@@ -42,7 +43,7 @@ dispatch(SelectUser(false))
             <MessagesDisplay />
           </Suspense>
         }  />
-        <Route path={`message/:userId/:username/:profileImage`} element={
+        <Route path="/message" element={
           <Suspense fallback={<div>Loading...</div>}>
             <MessagesDisplay />
           </Suspense>

@@ -53,6 +53,7 @@ const ChatlistSlice = createSlice({
         },
         ShowMsgSettingDropDownBox : (state,action) =>{
             state.MsgSettingDropDown = action.payload;
+            state.Chating_user_setting_dropdown = false;
         },
         ShowCheckBoxs_Visiblity : (state,action)=>{
             state.Selection_Check_Visible = action.payload;
@@ -83,6 +84,7 @@ const ChatlistSlice = createSlice({
         },
         ShowChatingList_dropdown: (state,action)=>{
             state.Chating_user_setting_dropdown = action.payload;
+            state.MsgSettingDropDown = false;
         },
 
         SelectUser:(state,action)=>{
