@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SelectUser, ShowChatingList_dropdown, Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
 import { search } from '../redux/SearchUser/searchuserSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 
 const DeleteChat_gql = gql`
 mutation deletechat ($req_details:Deletechatuser){
@@ -40,27 +42,34 @@ export default function SearchBox() {
   }
 
   async function Delete_Chat_Users(){
-   try {
+
+   if(checkedUserId.length ===0){
+    alert("Please Select 1 user to delete")
+    dispatch(ShowChatingList_dropdown(false)) 
+   }
+   else{
+    try {
     
-    if(checkUser.length > 0 && checkedUserId.length >0){
-  
-    let ChatList_forFilter = Chat;
+      if(checkUser.length > 0 && checkedUserId.length >0){
     
-    for(let i =0; i<checkedUserId.length; i++){
-      ChatList_forFilter =  ChatList_forFilter.filter((item)=> item._id !== checkedUserId[i])
-    }
-   
-    dispatch(Update_User_Chatlist(ChatList_forFilter));
-    dispatch(ShowChatingList_dropdown(false))
-     const {data} =await DeleteChatingUsers({variables:{req_details:{chat_id:checkUser,users_id:checkedUserId}}})
-  
-      if(data){
-        alert(data.DeleteChatingUsers.msg)
+      let ChatList_forFilter = Chat;
+      
+      for(let i =0; i<checkedUserId.length; i++){
+        ChatList_forFilter =  ChatList_forFilter.filter((item)=> item._id !== checkedUserId[i])
+      }
+     
+      dispatch(Update_User_Chatlist(ChatList_forFilter));
+      dispatch(ShowChatingList_dropdown(false))
+       const {data} =await DeleteChatingUsers({variables:{req_details:{chat_id:checkUser,users_id:checkedUserId}}})
+    
+        if(data){
+          alert(data.DeleteChatingUsers.msg)
+       }
+      }
+      
+     } catch (error) {
+      console.log(error.message)
      }
-    }
-    
-   } catch (error) {
-    console.log(error.message)
    }
   }
 
@@ -76,9 +85,9 @@ export default function SearchBox() {
             className='p-2 w-full outline-none border-b-2 border-purple-500' placeholder='Search by Name, Email'/>
           </div>
          </form>
-         <div className='text-center cursor-pointer' onClick={ShowDropDown}>
+         <div className='text-center cursor-pointer w-20' onClick={ShowDropDown}>
           <span className='block text-2xl font-bold my-3 ' >
-          :
+          <FontAwesomeIcon icon={faEllipsisVertical} />
           </span>
          </div>
        </div>

@@ -1,10 +1,25 @@
 import React, { lazy, Suspense } from 'react'
+import { useDispatch } from 'react-redux'
+import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
+import { Selected_Msgs, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
+import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
 
 const SearchBox = lazy(()=>import("../components/SearchBox"))
 const UserDetailsUpdate = lazy(()=>import("../components/UserDetailsUpdate"))
 const HeroImage = lazy(()=>import("../components/HeroImage"))
 
 export default function Account() {
+
+  const dispatch = useDispatch();
+
+  let clearSelectmsg = {
+    Messages_id: [],
+    filemsgs_details: []
+}
+dispatch(showMsgInfo(false))
+dispatch(ShowCheckBoxs_Visiblity(false))
+dispatch(Selected_Msgs(clearSelectmsg))
+dispatch(showUserDetailspage(false))
   return (
     <div>
       

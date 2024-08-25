@@ -37,7 +37,7 @@ export default function MessageInfo() {
             Messages_id: [],
             filemsgs_details: []
         }
-        dispatch(showMsgInfo())
+        dispatch(showMsgInfo(false))
         dispatch(ShowCheckBoxs_Visiblity(false))
         dispatch(Selected_Msgs(clearSelectmsg))
 
@@ -92,40 +92,44 @@ export default function MessageInfo() {
                     <div>
                         <div className='py-8 bg-gray-50'>
                             <h1 className='px-2'>
-                               {Data && Data.GiveMessageInfo.msg !== "" ?
-                               (
-                                <>
-                                 <span className={Data && S_UID._id === Data.GiveMessageInfo.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
-                                    : `bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
-                                }>{Data && Data.GiveMessageInfo.msg}
-                                    <span className='font-normal  mx-1 text-[9px] '>{splittime(Data && Data.GiveMessageInfo.Time)}</span>
 
-                                </span>
-                                </>
-                               )
-                               :
-                               (
-                               <>
-                               <div>
-                                {Data && Data.GiveMessageInfo.FileMsg[0].type !== "video/mp4" ?
-                                 (
-                                    <div className='w-64 h-48 p-1 overflow-hidden '>
-                                       <img src={Data && Data.GiveMessageInfo.FileMsg[0].url} alt=""  className='w-full h-full'/>
-                                    </div>
-                                 )
-                                 :
-                                 (
-                                    <div className='w-64 h-48 p-1 overflow-hidden '>
-                                     <video  className='max-w-[100%] rounded-md' controls>
-                                      <source src={Data && Data.GiveMessageInfo.FileMsg[0].url} alt={Data && Data.GiveMessageInfo.FileMsg[0].filename}/>
-                                     </video>
-                                    </div>
-                                 )
-                                 }
-                               </div>
-                               </>
-                               )
-                            }
+                                {/* If Message Available */}
+
+                                {Data && Data.GiveMessageInfo.msg !== "" &&
+                                    (
+                                        <>
+                                            <span className={Data && S_UID._id === Data.GiveMessageInfo.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
+                                                : `bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
+                                            }>{Data && Data.GiveMessageInfo.msg}
+                                                <span className='font-normal  mx-1 text-[9px] '>{splittime(Data && Data.GiveMessageInfo.Time)}</span>
+
+                                            </span>
+                                        </>
+                                    )}
+                                  
+                                  {/* If file type Message available */}
+                                        
+                                    {Data && Data.GiveMessageInfo.FileMsg[0].type !=="" && 
+                                     <div>
+                                     {Data && Data.GiveMessageInfo.FileMsg[0].type !== "video/mp4" ?
+                                         (
+                                             <div className='w-64 h-48 p-1 overflow-hidden '>
+                                                 <img src={Data && Data.GiveMessageInfo.FileMsg[0].url} alt="" className='w-full h-full' />
+                                             </div>
+                                         )
+                                         :
+                                         (
+                                             <div className='w-64 h-48 p-1 overflow-hidden '>
+                                                 <video className='max-w-[100%] rounded-md' controls>
+                                                     <source src={Data && Data.GiveMessageInfo.FileMsg[0].url} alt={Data && Data.GiveMessageInfo.FileMsg[0].filename} />
+                                                 </video>
+                                             </div>
+                                         )
+                                     }
+                                 </div>
+                                    }
+                                    
+                                   
                             </h1>
                         </div>
                     </div>

@@ -2,8 +2,10 @@ import React, {  Suspense, useCallback, useEffect} from 'react'
 import { Route, Routes,  } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
 import { useDispatch } from 'react-redux'
-import { SelectUser, ShowChatingList_dropdown } from '../redux/chatinguserlist/ChatList'
+import { Selected_Msgs, SelectUser, ShowChatingList_dropdown, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import SearchBox from '../components/SearchBox'
+import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
+import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
 
 
 // const SearchBox = React.lazy(()=>import("../components/SearchBox"))
@@ -11,6 +13,20 @@ const ChatingUserList = React.lazy(()=>import("../components/ChatingUserList"))
 
 export default function Chat() {
 const dispatch = useDispatch();
+
+
+
+
+
+  let clearSelectmsg = {
+    Messages_id: [],
+    filemsgs_details: []
+  }
+dispatch(showUserDetailspage(false))
+dispatch(showMsgInfo(false))
+dispatch(ShowCheckBoxs_Visiblity(false))
+dispatch(Selected_Msgs(clearSelectmsg))
+
 
 useEffect(()=>{
 dispatch(ShowChatingList_dropdown(false))

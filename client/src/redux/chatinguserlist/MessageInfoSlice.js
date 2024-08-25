@@ -8,13 +8,8 @@ const MsgInfoComponent = createSlice({
     name:"msginfo",
     initialState,
     reducers:{
-        showMsgInfo : (state) =>{
-            if(state.showMsg_Info_component){
-                state.showMsg_Info_component = false;
-            }
-            else{
-                state.showMsg_Info_component = true;
-            }
+        showMsgInfo : (state,action) =>{
+            state.showMsg_Info_component = action.payload;
         }
     }
 })

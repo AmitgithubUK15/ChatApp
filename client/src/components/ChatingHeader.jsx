@@ -5,6 +5,9 @@ import {  remove_ui_msg, Selected_Msgs, ShowCheckBoxs_Visiblity, ShowMsgSettingD
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import app from '../firebase';
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
 
 const CheckUserOnlineOrNot = gql`
 mutation check($user_id:String!){
@@ -26,6 +29,7 @@ export default function ChatingHeader() {
   const {S_UID} = useSelector((state)=>state.user);
   const {selectedmsg} = useSelector((state)=> state.chat);
   const {currentuser} = useSelector((state)=>state.currentchatuser);
+  const {visible_userdetailspage} = useSelector((state)=>state.userdetailspage);
 
   // const {userId,username,profileImage}  = useParams();
 
@@ -89,22 +93,25 @@ function show_Checkbox_onMessages(){
 
 // send to msg on server for delete msg
 async function Send_DeleteMsg_Details(){
- try {
-  
-  dispatch(remove_ui_msg())
-  let deletemsgobject = {
-    msg_id:selectedmsg.Messages_id,
+ if(selectedmsg.Messages_id.length ===0 && selectedmsg.filemsgs_details.length ===0){
+   alert("Please select 1 message to Delete message")
+   dispatch(ShowMsgSettingDropDownBox(false))
   }
-  
-  let {data} = await DeleteUserMsg({variables:{senderId:S_UID._id,reciverID:currentuser.userId,msgsId:deletemsgobject}})
-  
-  if(data){
-    setDeletefile_firebase(!deletefile_firebase ? true : false)
-  }
-
-  
- } catch (error) {
-  console.log(error.message)
+  else{
+  try {
+    dispatch(remove_ui_msg())
+    let deletemsgobject = {
+      msg_id:selectedmsg.Messages_id,
+    }
+    
+    let {data} = await DeleteUserMsg({variables:{senderId:S_UID._id,reciverID:currentuser.userId,msgsId:deletemsgobject}})
+    
+    if(data){
+      setDeletefile_firebase(!deletefile_firebase ? true : false)
+    }
+   } catch (error) {
+    console.log(error.message)
+   }
  }
 }
 
@@ -147,9 +154,9 @@ useMemo(()=>{
 // handle show_message_Info function 
 
 function show_message_Info(){
-  console.log(selectedmsg);
+  
   if(selectedmsg.Messages_id.length > 0 && selectedmsg.Messages_id.length <=1){
-    dispatch(showMsgInfo())
+    dispatch(showMsgInfo(true))
     dispatch(ShowMsgSettingDropDownBox(false))
   }
   else{
@@ -165,12 +172,23 @@ function show_message_Info(){
   }
 }
 
+
+// handle show Userdetails page
+
+function GotoUserdetails(){
+ if(!visible_userdetailspage){
+  dispatch(showUserDetailspage(true))
+}
+else{
+dispatch(showUserDetailspage(false))
+}
+}
   return (
     <div className='w-[780px] bg-white shadow-sm'>
        
 
     <div className='flex  py-2 w-full px-2'>
-      <div className='w-1/2 flex gap-3 '>
+      <div className='w-1/2 flex gap-3 cursor-pointer' onClick={GotoUserdetails}>
       <div>
       <div className='mx-auto  w-10 h-10  rounded-full  shadow-md overflow-hidden'>
                   <img src={`${currentuser && currentuser.useravatar.url}`} alt=""  className='w-full h-full' />
@@ -185,7 +203,9 @@ function show_message_Info(){
       </div>
 
       <div className='text-right w-1/2 '>
-         <button className='text-2xl text-black font-bold mx-3' onClick={ShowMsgsettingsBox}>:</button>
+         <button className='text-2xl w-10 h-full text-black font-bold mx-3' onClick={ShowMsgsettingsBox}>
+         <FontAwesomeIcon icon={faEllipsisVertical} />
+         </button>
 
         {MsgSettingDropDown && 
          <div className='w-[24rem] px-2 absolute top-24  flex flex-row-reverse z-10'>

@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import { ShowChatdisplay } from '../redux/user/userSlice';
 import "./index.css"
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
+import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
 
 const UserAccount = gql`
  query getAlluser{
@@ -15,6 +16,7 @@ const UserAccount = gql`
    url
    }
    email,
+   about
   }
  }
 `
@@ -39,8 +41,10 @@ export default function UserList() {
   }
   
 
-  function Navigatetochatuser(userId,username,useravatar,email){
-    dispatch(setCurrentUser({userId,username,useravatar,email}))
+  function Navigatetochatuser(userId,username,useravatar,email,about){
+    dispatch(showUserDetailspage(false))
+    dispatch(setCurrentUser({userId,username,useravatar,email,about}))
+    
     navigate("/message");
    }
 
@@ -53,7 +57,7 @@ export default function UserList() {
        className={`${value.username.includes(`${searchquery}`) || value.email.includes(`${searchquery}`) ?'order-first': 'bg-transparent' }`}>
 
           {value._id !== S_UID._id ? 
-          (  <Link onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email)} 
+          (  <Link onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email,value.about)} 
           to={`message`} >
             <div id='listcomponent' className=' py-5 hover:bg-gray-100 transition-colors duration-200 ease-linear' >       
             <div className='flex'>

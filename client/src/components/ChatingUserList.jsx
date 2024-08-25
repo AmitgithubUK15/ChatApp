@@ -3,11 +3,13 @@ import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
 import { useEffect, useMemo,useState } from 'react';
-import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
+import { Selected_Msgs, ShowCheckBoxs_Visiblity, Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import { checkedUser_adding } from '../redux/chatinguserlist/checkedUserslice';
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
+import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice';
+import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
 
 const UserAccount = gql`
 mutation getusers($sender:String!){
@@ -17,6 +19,7 @@ mutation getusers($sender:String!){
           username,
           _id,
           email,
+          about,
           avatar{
           filename,
           size,
@@ -45,8 +48,10 @@ const {searchquery} = useSelector((state)=>state.searching);
 
 
 
- function Navigatetochatuser(userId,username,useravatar,email){
-  dispatch(setCurrentUser({userId,username,useravatar,email}))
+ function Navigatetochatuser(userId,username,useravatar,email,about){
+  dispatch(showUserDetailspage(false))
+  dispatch(setCurrentUser({userId,username,useravatar,email,about}))
+  
   navigate("/message");
  }
 
@@ -140,7 +145,7 @@ useEffect(()=>{
 
           {value._id !== S_UID._id ? 
           (  <Link 
-            onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email)} 
+            onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email,value.about)} 
           to={`message`}
            className='block w-[90%]'>
             
