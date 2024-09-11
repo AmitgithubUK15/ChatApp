@@ -31,6 +31,8 @@ app.use(cors({
   }));
 app.use(cookieParser());
 
+app.options('*', cors());
+
 mongoose.connect(process.env.URI)
 .then(()=>{
     console.log("Connected to MongoDB");
@@ -38,6 +40,7 @@ mongoose.connect(process.env.URI)
 .catch((error)=>{
     console.log(error);
 })
+
 
 
   server.listen(port, () => {
