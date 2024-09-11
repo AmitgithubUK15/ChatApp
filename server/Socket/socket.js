@@ -10,7 +10,7 @@ const app = express();
  const io = new Server(server,  
     {
     cors: {
-      origin: [`${process.env.CLIENT_SOCKET_URL}`],
+      origin: ['https://snickertalk.netlify.app'],
       methods: ["GET", "POST"],
     }
   }
