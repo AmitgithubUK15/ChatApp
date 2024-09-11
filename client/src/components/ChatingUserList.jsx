@@ -60,15 +60,7 @@ const {searchquery} = useSelector((state)=>state.searching);
  }
 
  
-  // Session Expired msg and logout user
-
-  useMemo(()=>{
-    if(LogoutUser){
-      alert(LogoutUser);
-      dispatch(logout())
-      navigate("/login")
-    }
-  },[LogoutUser])
+ 
 
 
   // store in state
@@ -130,7 +122,15 @@ useEffect(()=>{
   }
 },[ShowcheckBox_userlist])
 
+ // Session Expired msg and logout user
 
+ useMemo(()=>{
+  if(LogoutUser){
+    alert(LogoutUser);
+    dispatch(logout())
+    navigate("/login")
+  }
+},[LogoutUser])
 
 
   return ( 
