@@ -17,13 +17,19 @@ const port = process.env.PORT || 3000;
 app.use(cors({ 
   origin: process.env.CLIENT_SOCKET_URL,
    methods: ["GET", "POST","OPTIONS"],
-   allowedHeaders: ["Content-Type", "Authorization"],
+   allowedHeaders: [
+    "accept",
+    "Content-Type", 
+    "Authorization",
+    "referer",
+    "sec-ch-ua",
+    "sec-ch-ua-mobile",
+    "sec-ch-ua-platform",
+    "user-agent"
+  ],
     credentials: true 
   }));
 app.use(cookieParser());
-
-app.options('*', cors());
-
 
 mongoose.connect(process.env.URI)
 .then(()=>{
