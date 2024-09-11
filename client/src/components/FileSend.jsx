@@ -23,10 +23,10 @@ export default function FileSend() {
 
   }
 
-  function handleDockFileChange(event){
-    const files = Array.from(event.target.files);
-    setPdfUploadedfiles(files);
-  }
+  // function handleDockFileChange(event){
+  //   const files = Array.from(event.target.files);
+  //   setPdfUploadedfiles(files);
+  // }
 
   useMemo(()=>{
    if(data){
@@ -127,7 +127,7 @@ export default function FileSend() {
                 <p className='text-[11px] mx-5 py-1 font-semibold'>Gallary</p>
               </div>
 
-              <div className='w-20 rounded-lg h-20 p-1 cursor-pointer'>
+              {/* <div className='w-20 rounded-lg h-20 p-1 cursor-pointer'>
                 <input
                   type="file"
                   hidden
@@ -143,7 +143,7 @@ export default function FileSend() {
                   onClick={() => DocFileRef.current.click()}
                 />
                 <p className='text-[11px] mx-6 py-1 font-semibold'>Doc</p>
-              </div>
+              </div> */}
 
               <div className='w-20 rounded-lg h-20 p-1  cursor-pointer'>
               <button className='my-2 py-2 px-2 border text-white font-semibold rounded-full bg-purple-600' onClick={submitFiles}>Open</button>

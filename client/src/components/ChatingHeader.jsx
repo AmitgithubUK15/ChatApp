@@ -6,8 +6,9 @@ import { deleteObject, getStorage, ref } from 'firebase/storage';
 import app from '../firebase';
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
+import { chatinguserLists, showMessageDisplay } from '../redux/Messagedisplay/MessagedisplaySlice';
 
 const CheckUserOnlineOrNot = gql`
 mutation check($user_id:String!){
@@ -183,32 +184,49 @@ else{
 dispatch(showUserDetailspage(false))
 }
 }
+
+
+function handleChatboxvisiblity(){
+  dispatch(showMessageDisplay(false));
+  dispatch(chatinguserLists(true));
+}
+
   return (
-    <div className='w-[780px] bg-white shadow-sm'>
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full bg-white shadow-sm'>
        
 
     <div className='flex  py-2 w-full px-2'>
-      <div className='w-1/2 flex gap-3 cursor-pointer' onClick={GotoUserdetails}>
+      <div className='2xl:w-1/2  xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-1/2 xs:w-1/2
+      flex gap-3 cursor-pointer' onClick={GotoUserdetails}>
+
+      <div>
+     <button onClick={handleChatboxvisiblity} className=' text-2xl font-bold 2xl:hidden xl:hidden lg:hidden md:hidden sm:block xs:block'>
+       <FontAwesomeIcon icon={faArrowLeft} />
+      </button>
+     </div>
+     
       <div>
       <div className='mx-auto  w-10 h-10  rounded-full  shadow-md overflow-hidden'>
-                  <img src={`${currentuser && currentuser.useravatar.url}`} alt=""  className='w-full h-full' />
-            </div>
+          <img src={`${currentuser && currentuser.useravatar.url}`} alt=""  className='w-full h-full' />
       </div>
+      </div>
+      
       <div>
         <h1 className=''>
-          <span className=' text-black font-bold text-xl'>{currentuser && currentuser.username}</span>
+          <span className=' text-black font-bold text-xl  2xl:w-full 1xl:w-full xl:w-full 1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-28 xs:w-16   overflow-hidden truncate'>{currentuser && currentuser.username}</span>
         </h1>
         <p className='text-sm font-semibold font-sans text-green-400'>{status === "true" ? "Online" :"Offline"}</p>
       </div>
       </div>
 
-      <div className='text-right w-1/2 '>
+      <div className='text-right 2xl:w-1/2  xl:w-1/2 lg:w-1/2 md:w-1/2 sm:w-1/2 xs:w-1/2 '>
          <button className='text-2xl w-10 h-full text-black font-bold mx-3' onClick={ShowMsgsettingsBox}>
          <FontAwesomeIcon icon={faEllipsisVertical} />
          </button>
 
         {MsgSettingDropDown && 
-         <div className='w-[24rem] px-2 absolute top-24  flex flex-row-reverse z-10'>
+         <div className='2xl:w-[38rem] 2.5xl:w-[40rem] 3xl:w-[36rem] 1xl:w-[34rem] 1.5xl:w-[32rem] xl:w-[29rem] 2lg:w-[29rem] 1lg:w-[26rem] sm_lg:w-[23rem] lg:w-[20rem] 1md:w-[19rem] 2md:w-[19rem] md:w-[15rem] sm:w-[18rem] xs:w-[11rem] 
+         px-2 absolute top-24  flex flex-row-reverse z-10'>
 
          <div className=' w-44 p-2 rounded bg-gray-200 text-left '>
 

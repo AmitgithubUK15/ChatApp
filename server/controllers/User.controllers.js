@@ -20,7 +20,7 @@ async function GoogleAuth(req){
      else{
       const GeneratePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
       const hashedpassword = await bcrypt.hash(GeneratePassword,8);
-      console.log("in controller")
+     
       const newUser = await User({
         username:req.username,
         email:req.email,

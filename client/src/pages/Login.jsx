@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import {gql, useMutation} from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../redux/user/userSlice';
 import GoogleAuth from '../components/GoogleAuth';
 import { setUserDetails } from '../redux/user/userRelatedDetails';
@@ -38,10 +38,7 @@ export default function Login() {
     const navigate = useNavigate();
     const Dispatch = useDispatch();
     
-    // const {S_UID} = useSelector((state)=>state.user);
 
-    // console.log("suid",S_UID);
-  
     
     function showPassword(){
         setShowPassword(true);
@@ -56,7 +53,7 @@ export default function Login() {
      useEffect(()=>{
       
        if(data){
-        setEmail('')
+      setEmail('')
       setPassword('')
       alert(data.signinUser.msg);
       Dispatch(loginSuccess({_id:data.signinUser.candidate._id}))
@@ -68,12 +65,11 @@ export default function Login() {
 
 
      async function SigninUser(e){
-    e.preventDefault();
+     e.preventDefault();
       try {
          await signinUser({variables:{email,password}})
-        
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
      }
 

@@ -2,9 +2,9 @@
 // import UserList from '../components/UserList'
 // import SearchBox from '../components/SearchBox'
 import React, {  Suspense, useEffect} from 'react'
-import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Selected_Msgs, ShowChatingList_dropdown, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
@@ -14,7 +14,7 @@ const UserList = React.lazy(()=>import("../components/UserList"))
 
 export default function UserAccountList() {
   const dispatch = useDispatch();
-
+  const {visiblechatlist} = useSelector((state)=>state.msgdisplay)
 
   let clearSelectmsg = {
     Messages_id: [],
@@ -30,9 +30,10 @@ useEffect(()=>{
 dispatch(ShowChatingList_dropdown(false))
 },[])
   return (
-    <div >
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full' >
       
-      <div className='absolute' >
+      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"} `}>
        <Suspense>
        <SearchBox />
        </Suspense>
@@ -40,8 +41,11 @@ dispatch(ShowChatingList_dropdown(false))
 
 
        <div className='flex ' style={{height:"100%"}}>
-       <div className=' mt-14'>
-          <div className='w-[417px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
+       <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0
+        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full 
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"}`}>
+          <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full h-full  overflow-y-scroll overflow-x-hidden
+         `} style={{scrollbarWidth:"thin"}}> 
             <Suspense >
             <UserList/>
             </Suspense>

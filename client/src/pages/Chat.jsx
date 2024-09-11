@@ -1,7 +1,7 @@
-import React, {  Suspense, useCallback, useEffect} from 'react'
+import React, {  Suspense,  useEffect} from 'react'
 import { Route, Routes,  } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Selected_Msgs, SelectUser, ShowChatingList_dropdown, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import SearchBox from '../components/SearchBox'
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
@@ -12,8 +12,8 @@ import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
 const ChatingUserList = React.lazy(()=>import("../components/ChatingUserList"))
 
 export default function Chat() {
+const {visiblechatlist} = useSelector((state)=>state.msgdisplay)
 const dispatch = useDispatch();
-
 
 
 
@@ -34,37 +34,45 @@ dispatch(SelectUser(false))
 },[])
 
   return (
-    <div>
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full'>
       
-      <div className='absolute'>
-       {/* <Suspense> */}
-       <SearchBox />
-       {/* </Suspense> */}
-      </div>
+      
+      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"} `}>
+      {/* <Suspense> */}
+      <SearchBox />
+      {/* </Suspense> */}
+     </div>
 
 
-       <div className='flex ' style={{height:"100%"}}>
-       <div className='mt-16'>
-          <div className='w-[417px] h-full  overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
-            <Suspense >
-            <ChatingUserList/>
-            </Suspense>
+       <div className='flex w-full' style={{height:"100%"}}>
+      
+       {/* // 2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full */}
+        <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0
+        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full
+          2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"}`}>
+        <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full h-full  overflow-y-scroll overflow-x-hidden
+         `} style={{scrollbarWidth:"thin"}}> 
+          <Suspense >
+          <ChatingUserList />
+          </Suspense>
           </div>
         </div>
+        
+          <Routes>
+          <Route index element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <MessagesDisplay />
+            </Suspense>
+          }  />
+          <Route path="/message"  element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <MessagesDisplay />
+            </Suspense>
+          } />
+          
+        </Routes> 
 
-   
-      <Routes>
-        <Route index element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <MessagesDisplay />
-          </Suspense>
-        }  />
-        <Route path="/message" element={
-          <Suspense fallback={<div>Loading...</div>}>
-            <MessagesDisplay />
-          </Suspense>
-        } />
-      </Routes> 
        </div>
 
      

@@ -35,7 +35,6 @@ export default function GoogleAuth() {
 
   useMemo(()=>{
      if(data){
-      console.log(data);
         alert(data.Googlelogin.msg);
          navigate("/rooms")
          dispatch(loginSuccess({_id:data.Googlelogin.candidate._id}))

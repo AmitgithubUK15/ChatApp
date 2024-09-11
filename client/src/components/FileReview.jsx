@@ -54,7 +54,6 @@ export default function FileReview() {
       }
     },[LogoutUser])
 
-  console.log("file",file_url_for_review);
   function ChangemidImage(index)  {
     setImageIndex(index);
   }
@@ -73,6 +72,10 @@ export default function FileReview() {
    let orignal_file_Update_data = fileData.filter((value,i)=> i!== index);
    dispatch(Send_File_Data(orignal_file_Update_data))
    setImageIndex(0);
+
+   if(updatefiles.length ===0  && orignal_file_Update_data.length === 0){
+    dispatch(HideImageReview_Box_NotClear_ExitingValue())   
+   }
   }
 
   function checkFiletype(filedetail){
@@ -108,7 +111,7 @@ export default function FileReview() {
   }
   
   function storeImage(file) {
-    console.log(file);
+    
     return new Promise((resolve, reject) => {
       if (!file || !file.name) {
         return reject(new Error("Invalid file object"));
@@ -125,7 +128,7 @@ export default function FileReview() {
           "state_changed",
           (snapshot) => {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(`Upload is ${progress}% done`);
+            // console.log(`Upload is ${progress}% done`);
           },
           (error) => {
             reject(error);
@@ -152,7 +155,6 @@ export default function FileReview() {
 
 useMemo(()=>{
   if(fileUrl){
-    console.log(fileUrl);
     dispatch(HideImageReview_Box_NotClear_ExitingValue())
     CreateMessage();
   }
@@ -181,12 +183,12 @@ async function CreateMessage() {
   )
 
   if(data){
-    console.log(data);
+   
     dispatch(FileShow_On_ChatBox(data.RequestforChat.ChatMsg))
   }
    }
    else{
-    console.log('fileurl length is 0')
+    // console.log('fileurl length is 0')
    }
 
   } catch (error) {

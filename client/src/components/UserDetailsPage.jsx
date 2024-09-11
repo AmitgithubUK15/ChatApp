@@ -34,7 +34,8 @@ export default function UserDetailsPage() {
               </div>
             </div>
             <div className='w-full h-32'>
-              <div className='relative bottom-24 left-72  w-52 h-48'>
+              <div className='relative bottom-24   w-52 h-48
+               2xl:left-[40%] 1xl:left-[40%] xl:left-[39%] 1lg:left-[38%] lg:left-[37%] 1md:left-[36%]  md:left-[35%] sm:left-[30%] xs:left-[25%]'> 
                 <div className='overflow-hidden mx-auto bg-gray-200 w-48 h-48 rounded-full border-4 border-white' style={{ boxShadow: " 0px 7px 14px #c5c5c5" }}>
                   <img  src={currentuser ? currentuser.useravatar.url : "/images/pic.jpg"} alt="" className='w-full h-full object-cover' />
                 </div>

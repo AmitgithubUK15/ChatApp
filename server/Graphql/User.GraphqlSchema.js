@@ -303,8 +303,6 @@ const MutationType = new GraphQLObjectType({
             }
         },
 
-
-
         GiveMessageInfo: {
             type:ChatMessageType,
             args:{

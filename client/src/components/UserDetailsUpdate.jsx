@@ -115,7 +115,7 @@ export default function UserDetailsUpdate() {
 
 
   function storeImage(file) {
-    console.log(file);
+    
     return new Promise((resolve, reject) => {
       if (!file || !file.name) {
         return reject(new Error("Invalid file object"));
@@ -132,7 +132,7 @@ export default function UserDetailsUpdate() {
           "state_changed",
           (snapshot) => {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(`Upload is ${progress}% done`);
+            // console.log(`Upload is ${progress}% done`);
           },
           (error) => {
             reject(error);
@@ -198,7 +198,7 @@ export default function UserDetailsUpdate() {
     setInputEdit(true)
     
     try {
-      console.log(InputValue);
+      // console.log(InputValue);
       const {data} = await updateUserName({variables:{user_id:S_UID._id, updated_name:InputValue}});
 
       if(data){
@@ -240,7 +240,7 @@ export default function UserDetailsUpdate() {
       const {data} = await  updateUser_about({variables:{user_id:S_UID._id, updated_about:aboutvalue}});
       
       if(data){
-        console.log(data);
+      
         alert(data.updateUser_about.msg);
         dispatch(setUserDetails(data.updateUser_about.candidate))
        
@@ -275,7 +275,8 @@ export default function UserDetailsUpdate() {
               </div>
             </div>
             <div className='w-full h-24'>
-              <div className='relative bottom-16 left-32  w-[10rem] h-36'>
+              <div className='relative bottom-16 left-32  w-[10rem] h-36
+                   2xl:left-32 1xl:left-32 xl:left-32 1lg:left-32 lg:left-[43%] 1md:left-[42%]  md:left-[41%] sm:left-[35%] xs:left-[30%]'>
                 <div className='overflow-hidden mx-auto bg-gray-200 w-[9rem] h-[9rem] rounded-full border-4 border-white' style={{ boxShadow: " 0px 7px 14px #c5c5c5" }}>
                   <input type="file" hidden onChange={(e) => HandleFilesubmit(e.target.files)} ref={fileref} accept='image/png,image/jpeg' />
                   <img onClick={handle_Uploadfile} src={currentuser ? currentuser.avatar.url : "/images/pic.jpg"} alt="" className='w-full h-full object-cover' />

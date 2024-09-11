@@ -9,6 +9,7 @@ import userRelatedDetails from './user/userRelatedDetails';
 import CurrentchatuserSlice from './CurrentChatuser/CurrentchatuserSlice';
 import MessageInfoSlice from './chatinguserlist/MessageInfoSlice';
 import UserDetailsPageslice from './user/UserDetailsPageslice';
+import MessagedisplaySlice from './Messagedisplay/MessagedisplaySlice';
 
 const rootreducer = combineReducers({
     user:userSlcie,
@@ -18,13 +19,14 @@ const rootreducer = combineReducers({
     userdetails:userRelatedDetails,
     currentchatuser:CurrentchatuserSlice,
     msgInfo:MessageInfoSlice,
-    userdetailspage:UserDetailsPageslice
+    userdetailspage:UserDetailsPageslice,
+    msgdisplay:MessagedisplaySlice,
 })
 
 const persistConfig = {
     key:'root',
     storage,
-    blacklist: ['chat','checkeduser','searching','msgInfo','userdetailspage'],
+    blacklist: ['chat','checkeduser','searching','msgInfo','userdetailspage','msgdisplay'],
 }
 
 const persisterReducer = persistReducer(persistConfig,rootreducer);

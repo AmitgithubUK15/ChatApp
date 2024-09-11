@@ -6,6 +6,7 @@ import "./index.css"
 import { logout } from '../redux/user/userSlice';
 import { useSocket } from '../context/SocketProvider';
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
+import { chatinguserLists, showMessageDisplay } from '../redux/Messagedisplay/MessagedisplaySlice';
 
 
 
@@ -29,13 +30,16 @@ export default function SideNav() {
 
    function ResetCurrentChatingUser(){
     dispatch(setCurrentUser(null));
+    dispatch(showMessageDisplay(false))
+    dispatch(chatinguserLists(true));
+
    }
   return (
-    <div className=' w-20 h-full  bg-white ' >
+    <div className=' w-16 h-full   ' >
         <div className='flex flex-col m-2 gap-6'>
             <Link to="/account">
             <div title='Profile'>
-                <div className='mx-auto  w-12 h-12 rounded-3xl  shadow-md overflow-hidden'>
+                <div className='mx-auto  w-10 h-10 rounded-3xl  shadow-md overflow-hidden'>
                    <img src={`${currentuser && currentuser.avatar.url}`} alt="" className='w-full h-full bg-gray-300' />
                 </div>
             </div>
@@ -43,24 +47,24 @@ export default function SideNav() {
           
            <Link  to="/rooms">
            <div title='Messages'>
-                <div className='mx-auto  w-14 h-14 rounded-3xl   overflow-hidden'>
-                   <img src="/images/message.png" alt=""  width={40}  className='mx-auto my-2' />
+                <div className='mx-auto  w-10 h-8 overflow-hidden'>
+                   <img src="/images/message.png" alt=""   className='mx-auto  w-8 h-8' />
                 </div>
             </div>
            </Link>
           
             <Link onClick={ResetCurrentChatingUser} to="/Adduser">
             <div title='Adduser'>
-                <div className='mx-auto  w-12 h-12 rounded-3xl    overflow-hidden'>
-                   <img src="/images/addchat.png" alt=""  />
+                <div className='mx-auto  w-12 h-10  overflow-hidden'>
+                   <img src="/images/addchat.png" alt=""  className='mx-auto w-9 h-9' />
                 </div>
             </div>
             </Link>
             
             
             <div  title='Logout' onClick={HandleLogout} className=' cursor-pointer'>
-                <div className='mx-auto  w-12 h-12 rounded-3xl   overflow-hidden'>
-                   <img src="/images/logout.png" alt="" width={40}  className='mx-auto my-2' />
+                <div className='mx-auto  w-12 h-8  overflow-hidden'>
+                   <img src="/images/logout.png" alt="" width={40}  className='mx-auto  w-8 h-8 ' />
                 </div>
             </div>
          

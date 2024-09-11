@@ -2,7 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../context/SocketProvider';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Hide_Msg_Notification, HideImage_Sending_slide, Selected_Msgs, ShowMsgSettingDropDownBox } from '../redux/chatinguserlist/ChatList';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import Picker from 'emoji-picker-react';
@@ -232,22 +232,22 @@ export default function ChatBox() {
 
   //  download image 
 
-  async function downloadImage(fileUrlpath) {
-    try {
-      const response = await fetch(fileUrlpath);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      AnchorRef.current.href = url;
-      AnchorRef.current.download = fileUrlpath.split('/').pop(); // Extract the file name from the URL
-      AnchorRef.current.click(); // Programmatically trigger the download
-      URL.revokeObjectURL(url); // Clean up the object URL
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-    }
-  }
+  // async function downloadImage(fileUrlpath) {
+  //   try {
+  //     const response = await fetch(fileUrlpath);
+  //     if (!response.ok) {
+  //       throw new Error('Network response was not ok');
+  //     }
+  //     const blob = await response.blob();
+  //     const url = URL.createObjectURL(blob);
+  //     AnchorRef.current.href = url;
+  //     AnchorRef.current.download = fileUrlpath.split('/').pop(); // Extract the file name from the URL
+  //     AnchorRef.current.click(); // Programmatically trigger the download
+  //     URL.revokeObjectURL(url); // Clean up the object URL
+  //   } catch (error) {
+  //     console.error('There was a problem with the fetch operation:', error);
+  //   }
+  // }
   
 // clear selectedmsg_id state
 
@@ -288,7 +288,7 @@ useEffect(()=>{
                
                   <div 
                   className={`
-                  ${Selection_Check_Visible === true ? "flex p-3 rounded-lg": null } 
+                  ${Selection_Check_Visible === true ? "flex  rounded-lg  2xl:p-3 xl:p-3 lg:p-3 md:p-3 sm:p-1 xs:p-1": null } 
                   ${value.senderId === S_UID._id ? "justify-between":null}`} 
                   style={{width:"50%", backgroundColor:`${Selection_Check_Visible === true ? "#7b57fb4a": "transparent"}`}}>
 
@@ -303,10 +303,11 @@ useEffect(()=>{
                    </div>}
 
                   {value.msg !== "" ?
-                  (<span className={S_UID._id === value.senderId ? `bg-purple-700 inline-block shadow-xl p-2 text-md font-semibold rounded-xl text-white`
-                    :`bg-slate-300 p-2 inline-block shadow-xl text-md font-semibold rounded-xl text-purple-black`
-                  }>{value.msg} 
-                  <span className='font-normal  mx-1 text-[9px] '>{splittime(value.Time)}</span>
+                  (<span className={`inline-block shadow-xl p-2  font-semibold rounded-xl 2xl:text-md xl:text-md lg:text-md md:text-md sm:text-md xs:text-sm
+                    ${S_UID._id === value.senderId ? "bg-purple-700 l text-white text-left"
+                    :"bg-slate-300  text-purple-black text-left"
+                  }`}>{value.msg} 
+                  <span className='font-normal  mx-1 2xl:text-[9px] xl:text-[9px] lg:text-[9px] md:text-[9px] sm:text-[9px] xs:text-[8px]'>{splittime(value.Time)}</span>
 
                   </span>)
                   :
@@ -322,8 +323,8 @@ useEffect(()=>{
                         :
                         ( <img src={files.url && files.url} alt={files.filename} loading='lazy' className='max-w-[100%] rounded-md' />)}
                         <p className={`font-normal  py-1 px-2 text-[11px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>
-                           <a href="#" ref={AnchorRef} onClick={(e)=>{e.preventDefault();downloadImage(files.url)}}>Download</a>
-                          {splittime(value.Time)}
+                           {/* <a href="#" ref={AnchorRef} onClick={(e)=>{e.preventDefault();downloadImage(files.url)}}>Download</a>
+                          {splittime(value.Time)} */}
                           </p>
                       </div>
                      ))}

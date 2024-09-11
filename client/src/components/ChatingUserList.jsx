@@ -3,13 +3,13 @@ import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
 import { useEffect, useMemo,useState } from 'react';
-import { Selected_Msgs, ShowCheckBoxs_Visiblity, Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
+import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
 import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
 import { checkedUser_adding } from '../redux/chatinguserlist/checkedUserslice';
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
-import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice';
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
+import { showMessageDisplay } from '../redux/Messagedisplay/MessagedisplaySlice';
 
 const UserAccount = gql`
 mutation getusers($sender:String!){
@@ -36,9 +36,11 @@ export default function UserList() {
 const {S_UID,LogoutUser} = useSelector((state)=>state.user);
 const {Chat} = useSelector((state)=>state.chat);
 const {checkUser,checkedUserId} = useSelector((state)=> state.checkeduser)
+const {visibledisplay,visiblechatlist} = useSelector((state)=>state.msgdisplay)
+
 const [ChatUserList ,{data,error}] = useMutation(UserAccount);
 const [newmsg ,setNewMsg] = useState();
-const [newmsgVisible,setnewMsgVisible] = useState(null);
+const [newmsegVisibl,setnewMsgVisible] = useState(null);
 const socket = useSocket();
 const {hideNotification,ShowcheckBox_userlist} = useSelector((state)=> state.chat);
 const dispatch = useDispatch();
@@ -51,8 +53,10 @@ const {searchquery} = useSelector((state)=>state.searching);
  function Navigatetochatuser(userId,username,useravatar,email,about){
   dispatch(showUserDetailspage(false))
   dispatch(setCurrentUser({userId,username,useravatar,email,about}))
-  
-  navigate("/message");
+    // navigate("/message");
+    
+    dispatch(showMessageDisplay(true)) 
+    
  }
 
  
@@ -130,7 +134,7 @@ useEffect(()=>{
 
 
   return ( 
-    <div className='w-[417px] flex flex-col' style={{}}>
+    <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-64 md:w-64 sm:w-full xs:w-full flex flex-col' style={{}}>
       {Chat && Chat.map((value)=>(
        <div key={value._id} onClick={Clearmsg} 
        className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} 
@@ -146,14 +150,14 @@ useEffect(()=>{
           {value._id !== S_UID._id ? 
           (  <Link 
             onClick={()=>Navigatetochatuser(value._id,value.username,value.avatar,value.email,value.about)} 
-          to={`message`}
-           className='block w-[90%]'>
+          // to={`message`}
+           className='block w-full'>
             
             <div id='listcomponent'
-             className='  py-5  transition-colors duration-200 ease-linear' >       
+             className='  py-3  transition-colors duration-200 ease-linear' >       
             <div className='flex'>
               <div className='w-20 '>
-                 <div className=' w-14 h-14  shadow-md mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
+                 <div className=' w-12 h-12  shadow-md mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
                   <img src={`${value.avatar.url}`} alt="" className='w-full h-full' />
                  </div>
               </div>
