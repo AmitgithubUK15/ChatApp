@@ -14,7 +14,12 @@ dotenv.config();
 const port = process.env.PORT || 3000;
 
 
-app.use(cors({ origin: process.env.CLIENT_SOCKET_URL, methods: ["GET", "POST","OPTIONS"], credentials: true }));
+app.use(cors({ 
+  origin: process.env.CLIENT_SOCKET_URL,
+   methods: ["GET", "POST","OPTIONS"],
+   allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true 
+  }));
 app.use(cookieParser());
 
 app.options('*', cors());
