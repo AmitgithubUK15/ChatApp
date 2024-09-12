@@ -18,17 +18,13 @@ app.use(cors({
   origin: process.env.CLIENT_SOCKET_URL,
    methods: ["GET", "POST","OPTIONS"],
    allowedHeaders: [
-    "accept",
-    "Content-Type", 
-    "Authorization",
-    "referer",
-    "sec-ch-ua",
-    "sec-ch-ua-mobile",
-    "sec-ch-ua-platform",
-    "user-agent"
+    'Content-Type', 
+    'Authorization', 
+    'Accept'
   ],
     credentials: true 
   }));
+  
 app.use(cookieParser());
 
 app.options('*', cors());
