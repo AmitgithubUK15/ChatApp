@@ -53,10 +53,10 @@ export default function Login() {
      useEffect(()=>{
       
        if(data){
-      setEmail('')
-      setPassword('')
       Dispatch(loginSuccess({_id:data.signinUser.candidate._id}))
       Dispatch(setUserDetails(data.signinUser.candidate))
+      setEmail('')
+      setPassword('')
       localStorage.setItem("S_ID",data.signinUser.token);
       alert(data.signinUser.msg);
       

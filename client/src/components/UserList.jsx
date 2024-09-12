@@ -28,7 +28,7 @@ export default function UserList() {
   const {S_UID} = useSelector((state)=> state.user);
   const {searchquery} = useSelector((state)=>state.searching);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+ 
 
   useMemo(()=>{
     if(data){

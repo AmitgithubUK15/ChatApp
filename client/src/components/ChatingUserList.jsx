@@ -1,11 +1,11 @@
-import { Link, useNavigate,  } from 'react-router-dom';
+import { Link,   } from 'react-router-dom';
 import { useDispatch, useSelector} from 'react-redux'
 import "./index.css"
 import { useSocket } from '../context/SocketProvider';
 import { useEffect, useMemo,useState } from 'react';
 import { Update_User_Chatlist } from '../redux/chatinguserlist/ChatList';
 import { gql, useMutation } from '@apollo/client';
-import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
+import { SessionExpried_Logout } from '../redux/user/userSlice';
 import { checkedUser_adding } from '../redux/chatinguserlist/checkedUserslice';
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice';
@@ -33,21 +33,17 @@ mutation getusers($sender:String!){
 `
 
 export default function UserList() {
-const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+const {S_UID} = useSelector((state)=>state.user);
 const {Chat} = useSelector((state)=>state.chat);
-const {checkUser,checkedUserId} = useSelector((state)=> state.checkeduser)
-const {visibledisplay,visiblechatlist} = useSelector((state)=>state.msgdisplay)
 
-const [ChatUserList ,{data,error}] = useMutation(UserAccount);
+const [ChatUserList ] = useMutation(UserAccount);
 const [newmsg ,setNewMsg] = useState();
 const [newmsegVisibl,setnewMsgVisible] = useState(null);
 const socket = useSocket();
 const {hideNotification,ShowcheckBox_userlist} = useSelector((state)=> state.chat);
 const dispatch = useDispatch();
-const navigate = useNavigate();
-const [CheckedUser ,setCheckedUser] = useState([]);
 const {searchquery} = useSelector((state)=>state.searching);
-
+const [Userdata,setUserdata] = useState();
 
 
  function Navigatetochatuser(userId,username,useravatar,email,about){
@@ -65,17 +61,17 @@ const {searchquery} = useSelector((state)=>state.searching);
 
   // store in state
   useEffect(()=>{
-        if(data){
-          dispatch(Update_User_Chatlist(data.ChatUserList.List.ConnectedUser));
+        if(Userdata){
+          dispatch(Update_User_Chatlist(Userdata.ChatUserList.List.ConnectedUser));
         }
-  },[data])
+  },[Userdata])
 
   
     useEffect(()=>{
       async function GetUserChatList(){
         try {
-            await ChatUserList({variables:{sender:S_UID._id}})
-            
+          const {data} =   await ChatUserList({variables:{sender:S_UID._id}})
+          setUserdata(data);
           } catch (error) {
             if(error){
               if(error.message === "Session Expired, please login"){
@@ -122,15 +118,7 @@ useEffect(()=>{
   }
 },[ShowcheckBox_userlist])
 
- // Session Expired msg and logout user
 
- useMemo(()=>{
-  if(LogoutUser){
-    alert(LogoutUser);
-    dispatch(logout())
-    navigate("/login")
-  }
-},[LogoutUser])
 
 
   return ( 

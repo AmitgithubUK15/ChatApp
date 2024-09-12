@@ -42,12 +42,14 @@ dispatch(SelectUser(false))
 
   useMemo(()=>{
     if(LogoutUser !== null){
-      alert(LogoutUser);
       socket.emit("client-disconnect", {userId: S_UID._id})
       socket.disconnect();
       dispatch(logout());
       localStorage.clear();
       dispatch(setCurrentUser(null));
+      alert(LogoutUser);
+
+      
       navigate("/login")
     }
   },[LogoutUser])
