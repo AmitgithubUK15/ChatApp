@@ -13,7 +13,6 @@ const PrivateRoute = React.lazy(() => import("./components/PrivateRoute"));
 
 function App() {
   const { S_UID } = useSelector((state) => state.user);
-
   return (
     <BrowserRouter>
       {S_UID !== null && (

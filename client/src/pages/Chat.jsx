@@ -1,11 +1,14 @@
-import React, {  Suspense,  useEffect} from 'react'
-import { Route, Routes,  } from 'react-router-dom'
+import React, {  Suspense,  useEffect, useMemo} from 'react'
+import { Route, Routes, useNavigate,  } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
 import { useDispatch, useSelector } from 'react-redux'
 import { Selected_Msgs, SelectUser, ShowChatingList_dropdown, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import SearchBox from '../components/SearchBox'
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
+import { logout } from '../redux/user/userSlice'
+import { useSocket } from '../context/SocketProvider'
+import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice'
 
 
 // const SearchBox = React.lazy(()=>import("../components/SearchBox"))
@@ -14,8 +17,9 @@ const ChatingUserList = React.lazy(()=>import("../components/ChatingUserList"))
 export default function Chat() {
 const {visiblechatlist} = useSelector((state)=>state.msgdisplay)
 const dispatch = useDispatch();
-
-
+const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+const navigate = useNavigate();
+const socket = useSocket();
 
 
   let clearSelectmsg = {
@@ -32,6 +36,21 @@ useEffect(()=>{
 dispatch(ShowChatingList_dropdown(false))
 dispatch(SelectUser(false))
 },[])
+
+
+  // Session Expired msg and logout user
+
+  useMemo(()=>{
+    if(LogoutUser !== null){
+      alert(LogoutUser);
+      socket.emit("client-disconnect", {userId: S_UID._id})
+      socket.disconnect();
+      dispatch(logout());
+      localStorage.clear();
+      dispatch(setCurrentUser(null));
+      navigate("/login")
+    }
+  },[LogoutUser])
 
   return (
     <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full'>

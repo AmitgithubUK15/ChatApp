@@ -22,7 +22,7 @@ export default function SideNav() {
     function  HandleLogout(){
       socket.emit("client-disconnect", {userId: S_UID._id})
       socket.disconnect();
-      dispatch(logout())
+      dispatch(logout());
       localStorage.clear();
       dispatch(setCurrentUser(null));
       navigate("/login");

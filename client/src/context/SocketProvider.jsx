@@ -18,16 +18,22 @@ const {S_UID}  = useSelector((state)=>state.user);
 
 
 useEffect(()=>{
-  if(S_UID !== null && socket === null){
-    const websocket = io(import.meta.env.VITE_APP_SOCKET_URI,{
-      query:{userID:S_UID._id},
-      transports: ['websocket', 'polling']  
+  let websocket;
+  if (S_UID !== null && socket === null) {
+    websocket = io(import.meta.env.VITE_APP_SOCKET_URI, {
+      query: { userID: S_UID._id },
+      transports: ['websocket', 'polling'],
     });
     setSocket(websocket);
   }
-  else{
-   setSocket(null);
-  }
+
+  // Cleanup function to close the socket connection
+  return () => {
+    if (websocket) {
+      websocket.disconnect();
+      setSocket(null);  // Clear socket state
+    }
+  };
 },[S_UID])
  
   return (

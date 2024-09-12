@@ -1,20 +1,26 @@
 
 // import UserList from '../components/UserList'
 // import SearchBox from '../components/SearchBox'
-import React, {  Suspense, useEffect} from 'react'
-import { Route, Routes } from 'react-router-dom'
+import React, {  Suspense, useEffect, useMemo} from 'react'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import MessagesDisplay from './MessagesDisplay'
 import { useDispatch, useSelector } from 'react-redux'
 import { Selected_Msgs, ShowChatingList_dropdown, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
+import { useSocket } from '../context/SocketProvider'
+import { logout } from '../redux/user/userSlice'
+import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice'
 
 const SearchBox = React.lazy(()=>import("../components/SearchBox"))
 const UserList = React.lazy(()=>import("../components/UserList"))
 
 export default function UserAccountList() {
   const dispatch = useDispatch();
-  const {visiblechatlist} = useSelector((state)=>state.msgdisplay)
+  const {visiblechatlist} = useSelector((state)=>state.msgdisplay);
+  const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+  const navigate = useNavigate();
+   const socket = useSocket();
 
   let clearSelectmsg = {
     Messages_id: [],
@@ -29,6 +35,22 @@ dispatch(Selected_Msgs(clearSelectmsg))
 useEffect(()=>{
 dispatch(ShowChatingList_dropdown(false))
 },[])
+
+const token = localStorage.getItem('S_ID'); 
+
+  useMemo(()=>{
+    if(LogoutUser !== null || token === "" || token === null){
+      alert("Session Expired, please login");
+      socket.emit("client-disconnect", {userId: S_UID._id})
+      socket.disconnect();
+      dispatch(logout());
+      localStorage.clear();
+      dispatch(setCurrentUser(null));
+      navigate("/login")
+    }
+  },[LogoutUser])
+
+
   return (
     <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full' >
       

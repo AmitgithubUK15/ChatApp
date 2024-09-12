@@ -60,9 +60,7 @@ export default function Login() {
       localStorage.setItem("S_ID",data.signinUser.token);
       alert(data.signinUser.msg);
       
-      setTimeout(()=>{
-        navigate("/rooms")
-      },1000)
+      navigate("/rooms")
        }
      },[data])
 

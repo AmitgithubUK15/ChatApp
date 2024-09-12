@@ -36,7 +36,6 @@ export default function GoogleAuth() {
   useMemo(()=>{
      if(data){
         alert(data.Googlelogin.msg);
-         navigate("/rooms")
          dispatch(loginSuccess({_id:data.Googlelogin.candidate._id}))
          dispatch(setUserDetails(data.Googlelogin.candidate))
         localStorage.setItem("S_ID",data.Googlelogin.token);

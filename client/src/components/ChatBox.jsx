@@ -2,9 +2,8 @@ import { gql, useMutation } from '@apollo/client';
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSocket } from '../context/SocketProvider';
-import { useNavigate } from 'react-router-dom';
 import { Hide_Msg_Notification, HideImage_Sending_slide, Selected_Msgs, ShowMsgSettingDropDownBox } from '../redux/chatinguserlist/ChatList';
-import { logout, SessionExpried_Logout } from '../redux/user/userSlice';
+import {  SessionExpried_Logout } from '../redux/user/userSlice';
 import Picker from 'emoji-picker-react';
 
 
@@ -50,7 +49,7 @@ export default function ChatBox() {
   const [RequestforChat] = useMutation(SendMessage);
   const [GetUserMessages] = useMutation(GetMessage)
 
-  const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+  const {S_UID} = useSelector((state)=>state.user);
   const {currentuser} = useSelector((state)=>state.currentchatuser);
   const {file,ShowImage_In_ChatBox,Selection_Check_Visible,
     showImage_sending_Slide,clear_checkMsgstate,remove_msg_from_UI} = useSelector((state)=>state.chat);
@@ -61,31 +60,17 @@ export default function ChatBox() {
   const [MsgList,setMsgList] = useState()
   const dispatch = useDispatch();
   const [sendmsgData,setSendMsgData] = useState();
-  const navigate = useNavigate();
+  
   const [showPicker, setShowPicker] = useState(false);
   const [Emoji,setEmoji] = useState()
-  const AnchorRef = useRef();
+  // const AnchorRef = useRef();
   const [selectmsg_id,setSelectedMsg_id] = useState({
     Messages_id:[],
     filemsgs_details:[],
   })
   
-
-  // Session Expired msg and logout user
-
-  useMemo(()=>{
-    if(LogoutUser){
-      alert(LogoutUser);
-      dispatch(logout())
-      navigate("/login")
-    }
-  },[LogoutUser])
   
   // Get user message by server 
-
-
-
-  
 
   // Get user message Notification
   useEffect(()=>{

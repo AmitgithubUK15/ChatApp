@@ -1,16 +1,22 @@
-import React, { lazy, Suspense } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import  { lazy, Suspense, useMemo, } from 'react'
+import { useDispatch, useSelector,  } from 'react-redux'
 import { showMsgInfo } from '../redux/chatinguserlist/MessageInfoSlice'
 import { Selected_Msgs, ShowCheckBoxs_Visiblity } from '../redux/chatinguserlist/ChatList'
 import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
 import { chatinguserLists, showMessageDisplay } from '../redux/Messagedisplay/MessagedisplaySlice'
+import { useNavigate } from 'react-router-dom'
+import { useSocket } from '../context/SocketProvider'
+import { logout } from '../redux/user/userSlice'
+import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice'
 
 
 const UserDetailsUpdate = lazy(()=>import("../components/UserDetailsUpdate"))
 const HeroImage = lazy(()=>import("../components/HeroImage"))
 
 export default function Account() {
-  
+  const {S_UID,LogoutUser} = useSelector((state)=>state.user);
+  const navigate = useNavigate();
+  const socket = useSocket();
   const dispatch = useDispatch();
 
   let clearSelectmsg = {
@@ -23,6 +29,20 @@ dispatch(Selected_Msgs(clearSelectmsg))
 dispatch(showUserDetailspage(false))
 dispatch(showMessageDisplay(false));
   dispatch(chatinguserLists(true));
+
+  const token = localStorage.getItem('S_ID'); 
+
+  useMemo(()=>{
+    if(LogoutUser !== null || token === "" || token === null){
+      alert("Session Expired, please login");
+      socket.emit("client-disconnect", {userId: S_UID._id})
+      socket.disconnect();
+      dispatch(logout());
+      localStorage.clear();
+      dispatch(setCurrentUser(null));
+      navigate("/login")
+    }
+  },[LogoutUser])
  
   return (
     <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full'>
