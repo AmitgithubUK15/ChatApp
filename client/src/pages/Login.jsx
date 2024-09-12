@@ -55,11 +55,14 @@ export default function Login() {
        if(data){
       setEmail('')
       setPassword('')
-      alert(data.signinUser.msg);
       Dispatch(loginSuccess({_id:data.signinUser.candidate._id}))
       Dispatch(setUserDetails(data.signinUser.candidate))
       localStorage.setItem("S_ID",data.signinUser.token);
-      navigate("/rooms")
+      alert(data.signinUser.msg);
+      
+      setTimeout(()=>{
+        navigate("/rooms")
+      },1000)
        }
      },[data])
 
