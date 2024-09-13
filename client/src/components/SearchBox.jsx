@@ -75,25 +75,25 @@ export default function SearchBox() {
 
 
   return (
-    <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-64 md:w-64 sm:w-full xs:w-full bg-white  '  >
+    <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-64 md:w-64 sm:w-full xs:w-full s:w-full bg-white  '  >
        
        <div className='flex justify-around'>
          <form action="" className='py-3'>
-          <div className='2xl:w-80 1xl:w-80 xl:w-80 1lg:w-64 lg:w-64 1md:w-48 md:w-48 sm:w-[450px] xs:w-72
+          <div className='2xl:w-80 1xl:w-80 xl:w-80 1lg:w-64 lg:w-64 1md:w-48 md:w-48 sm:w-[450px] xs:w-72 s:w-48
            mx-auto  flex rounded-lg  ' style={{backgroundColor:"rgb(168 0 194)"}}>
 
             <input type="text"  onChange={(e)=>dispatch(search(e.target.value))}
             className='p-2 w-full outline-none border-b-2 border-purple-500' placeholder='Search by Name, Email'/>
           </div>
          </form>
-         <div className='text-center cursor-pointer 2xl:w-20 sm:w-14 xs:w-10 2xl:px-0 sm:px-4 xs:px-2' onClick={ShowDropDown}>
+         <div className='text-center cursor-pointer 2xl:w-20 sm:w-14 xs:w-10 2xl:px-0 sm:px-4 xs:px-2 s:px-1' onClick={ShowDropDown}>
           <span className='block text-2xl font-bold my-3 ' >
           <FontAwesomeIcon icon={faEllipsisVertical} />
           </span>
          </div>
        </div>
        {Chating_user_setting_dropdown && 
-         <div className='2xl:w-[26rem] 2.5xl:w-[26rem] 3xl:w-[26rem] 1xl:w-[26rem] 1.5xl:w-[26rem] xl:w-[26rem] 2lg:w-[20rem] 1lg:w-[20rem] sm_lg:w-[20rem] lg:w-[20rem] 1md:w-[16rem] 2md:w-[19rem] md:w-[15rem]  sm:w-full xs:w-full
+         <div className='2xl:w-[26rem] 2.5xl:w-[26rem] 3xl:w-[26rem] 1xl:w-[26rem] 1.5xl:w-[26rem] xl:w-[26rem] 2lg:w-[20rem] 1lg:w-[20rem] sm_lg:w-[20rem] lg:w-[20rem] 1md:w-[16rem] 2md:w-[19rem] md:w-[15rem]  sm:w-full xs:w-full s:w-full
           px-2 absolute top-20  flex flex-row-reverse z-10'>
 
          <div className='w-44 p-2 rounded bg-gray-100 text-left '>

@@ -162,7 +162,7 @@ export default function ChatBox() {
       const day = ["Sunday","Monday","Tuesday","Webnesday","Thrusday","Friday","Saturday"]
       const Currentdate = new Date();
       const dayNumber = Currentdate.getDay();
-    const {data} =  await RequestforChat(
+      const {data} =  await RequestforChat(
         {variables:
           {
           senderId:S_UID._id,
@@ -273,7 +273,7 @@ useEffect(()=>{
                
                   <div 
                   className={`
-                  ${Selection_Check_Visible === true ? "flex  rounded-lg  2xl:p-3 xl:p-3 lg:p-3 md:p-3 sm:p-1 xs:p-1": null } 
+                  ${Selection_Check_Visible === true ? "flex  rounded-lg  2xl:p-3 xl:p-3 lg:p-3 md:p-3 sm:p-1 xs:p-1 ": null } 
                   ${value.senderId === S_UID._id ? "justify-between":null}`} 
                   style={{width:"50%", backgroundColor:`${Selection_Check_Visible === true ? "#7b57fb4a": "transparent"}`}}>
 
@@ -288,11 +288,11 @@ useEffect(()=>{
                    </div>}
 
                   {value.msg !== "" ?
-                  (<span className={`inline-block shadow-xl p-2  font-semibold rounded-xl 2xl:text-md xl:text-md lg:text-md md:text-md sm:text-md xs:text-sm
+                  (<span className={`inline-block shadow-xl p-2  font-semibold rounded-xl 2xl:text-md xl:text-md lg:text-md md:text-md sm:text-md xs:text-sm s:text-[10px]
                     ${S_UID._id === value.senderId ? "bg-purple-700 l text-white text-left"
                     :"bg-slate-300  text-purple-black text-left"
                   }`}>{value.msg} 
-                  <span className='font-normal  mx-1 2xl:text-[9px] xl:text-[9px] lg:text-[9px] md:text-[9px] sm:text-[9px] xs:text-[8px]'>{splittime(value.Time)}</span>
+                  <span className='font-normal  mx-1 2xl:text-[9px] xl:text-[9px] lg:text-[9px] md:text-[9px] sm:text-[9px] xs:text-[8px] s:text-[6px] '>{splittime(value.Time)}</span>
 
                   </span>)
                   :
@@ -307,9 +307,9 @@ useEffect(()=>{
                            </video>)
                         :
                         ( <img src={files.url && files.url} alt={files.filename} loading='lazy' className='max-w-[100%] rounded-md' />)}
-                        <p className={`font-normal  py-1 px-2 text-[11px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>
-                           {/* <a href="#" ref={AnchorRef} onClick={(e)=>{e.preventDefault();downloadImage(files.url)}}>Download</a>
-                          {splittime(value.Time)} */}
+                        <p className={`font-normal  py-1 px-2 2xl:text-[9px] xl:text-[9px] lg:text-[9px] md:text-[9px] sm:text-[9px] xs:text-[8px] s:text-[6px] ${S_UID._id === value.senderId ? "text-white": "text-black text-right"} `}>
+                           {/* <a href="#" ref={AnchorRef} onClick={(e)=>{e.preventDefault();downloadImage(files.url)}}>Download</a> */}
+                          {splittime(value.Time)}
                           </p>
                       </div>
                      ))}

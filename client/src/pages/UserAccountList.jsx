@@ -11,8 +11,8 @@ import { showUserDetailspage } from '../redux/user/UserDetailsPageslice'
 import { useSocket } from '../context/SocketProvider'
 import { logout } from '../redux/user/userSlice'
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice'
+import SearchBox from '../components/SearchBox'
 
-const SearchBox = React.lazy(()=>import("../components/SearchBox"))
 const UserList = React.lazy(()=>import("../components/UserList"))
 
 export default function UserAccountList() {
@@ -52,21 +52,21 @@ dispatch(ShowChatingList_dropdown(false))
 
 
   return (
-    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full' >
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full' >
       
-      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative
-        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"} `}>
-       <Suspense>
+      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative xs:relative s:relative
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block s:block":"sm:hidden xs:hidden s:hidden"} `}>
+       
        <SearchBox />
-       </Suspense>
+  
       </div>
 
 
        <div className='flex ' style={{height:"100%"}}>
-       <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0
-        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full 
-        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"}`}>
-          <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full h-full  overflow-y-scroll overflow-x-hidden
+       <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0 xs:mt-0 s:mt-0
+        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full s:w-full
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block s:block":"sm:hidden xs:hidden s:hidden"}`}>
+          <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full s:w-full h-full  overflow-y-scroll overflow-x-hidden
          `} style={{scrollbarWidth:"thin"}}> 
             <Suspense >
             <UserList/>

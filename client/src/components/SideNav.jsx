@@ -49,8 +49,8 @@ export default function SideNav() {
 
    }
   return (
-    <div className=' w-16 h-full   ' >
-        <div className='flex flex-col m-2 gap-6'>
+    <div className=' 2xl:w-16 xl:w-16 lg:w-16 md:w-16 sm:w-16 xs:w-14 s:w-12 h-full   ' >
+        <div className='flex flex-col  gap-6 2xl:m-2 xl:m-2 lg:m-2 md:m-2 sm:m-2 xs:m-1 s:m-1'>
             <Link to="/account">
             <div title='Profile'>
                 <div className='mx-auto  w-10 h-10 rounded-3xl  shadow-md overflow-hidden'>

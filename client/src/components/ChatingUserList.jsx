@@ -122,7 +122,7 @@ useEffect(()=>{
 
 
   return ( 
-    <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-64 md:w-64 sm:w-full xs:w-full flex flex-col' style={{}}>
+    <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-64 md:w-64 sm:w-full xs:w-full s:w-full flex flex-col' style={{}}>
       {Chat && Chat.map((value)=>(
        <div key={value._id} onClick={Clearmsg} 
        className={` ${newmsg && newmsg.senderId === value._id ? 'order-first' : null} 
@@ -141,17 +141,19 @@ useEffect(()=>{
           // to={`message`}
            className='block w-full'>
             
-            <div id='listcomponent'
+            <div id='listcomponent w-full'
              className='  py-3  transition-colors duration-200 ease-linear' >       
             <div className='flex'>
-              <div className='w-20 '>
-                 <div className=' w-12 h-12  shadow-md mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
+              <div className='2xl:w-20 xl:w-20 lg:w-20 md:w-20 sm:w-20 xs:w-16 s:w-16'>
+                 <div className=' 2x:w-12 xl:w-12 lg:w-12 md:w-12 sm:w-12 xs:w-10 s:w-10
+                 2xl:h-12 xl:h-12 lg:h-12 md:h-12 sm:h-12 xs:h-10 s:h-10  
+                 shadow-md mx-auto overflow-hidden' style={{borderRadius:"50px"}}>
                   <img src={`${value.avatar.url}`} alt="" className='w-full h-full' />
                  </div>
               </div>
               <div>
                 <div>
-                  <h1><span className=' font-bold'>{value.username}</span></h1>
+                  <h1><span className='2xl:text-md xl:text-md lg:text-md md:text-md sm:text-md xs:text-sm s:text-sm font-bold'>{value.username}</span></h1>
                 </div>
                  
                     {hideNotification === value._id ?

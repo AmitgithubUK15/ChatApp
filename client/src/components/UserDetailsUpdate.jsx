@@ -276,7 +276,7 @@ export default function UserDetailsUpdate() {
             </div>
             <div className='w-full h-24'>
               <div className='relative bottom-16 left-32  w-[10rem] h-36
-                   2xl:left-32 1xl:left-32 xl:left-32 1lg:left-32 lg:left-[43%] 1md:left-[42%]  md:left-[41%] sm:left-[35%] xs:left-[30%]'>
+                   2xl:left-32 1xl:left-32 xl:left-32 1lg:left-32 lg:left-[43%] 1md:left-[42%]  md:left-[41%] sm:left-[35%] xs:left-[30%] s:left-[24%]'>
                 <div className='overflow-hidden mx-auto bg-gray-200 w-[9rem] h-[9rem] rounded-full border-4 border-white' style={{ boxShadow: " 0px 7px 14px #c5c5c5" }}>
                   <input type="file" hidden onChange={(e) => HandleFilesubmit(e.target.files)} ref={fileref} accept='image/png,image/jpeg' />
                   <img onClick={handle_Uploadfile} src={currentuser ? currentuser.avatar.url : "/images/pic.jpg"} alt="" className='w-full h-full object-cover' />

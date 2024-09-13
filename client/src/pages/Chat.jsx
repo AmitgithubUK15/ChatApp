@@ -55,11 +55,11 @@ dispatch(SelectUser(false))
   },[LogoutUser])
 
   return (
-    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full'>
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full'>
       
       
-      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative
-        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"} `}>
+      <div className={`2xl:absolute xl:absolute lg:absolute md:absolute sm:relative s:relative
+        2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block s:block":"sm:hidden xs:hidden s:hidden"} `}>
       {/* <Suspense> */}
       <SearchBox />
       {/* </Suspense> */}
@@ -69,10 +69,10 @@ dispatch(SelectUser(false))
        <div className='flex w-full' style={{height:"100%"}}>
       
        {/* // 2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full */}
-        <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0
-        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full
-          2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block":"sm:hidden xs:hidden"}`}>
-        <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full h-full  overflow-y-scroll overflow-x-hidden
+        <div className={` 2xl:mt-16  xl:mt-16 lg:mt-16 md:mt-16 sm:mt-0 xs:mt-0 s:mt-0
+        2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full s:w-full
+          2xl:block xl:block lg:block md:block ${visiblechatlist ? "sm:block xs:block s:block":"sm:hidden xs:hidden s:hidden"}`}>
+        <div className={`2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-80 lg:w-80 1md:w-70 md:w-64 sm:w-full xs:w-full s:w-full h-full  overflow-y-scroll overflow-x-hidden
          `} style={{scrollbarWidth:"thin"}}> 
           <Suspense >
           <ChatingUserList />

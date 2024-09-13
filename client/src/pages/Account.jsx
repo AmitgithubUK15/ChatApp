@@ -45,12 +45,12 @@ dispatch(showMessageDisplay(false));
   },[LogoutUser])
  
   return (
-    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full'>
+    <div className='2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full'>
   
 
      <div className='flex ' style={{height:"100%"}}>
-     <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-[417px] lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full' >
-        <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-[417px] lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full h-screen overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
+     <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-[417px] lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full' >
+        <div className='2xl:w-[417px] 1xl:w-[417px] xl:w-[417px] 1lg:w-[417px] lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full h-screen overflow-y-scroll overflow-x-hidden' style={{scrollbarWidth:"thin"}}> 
           <Suspense >
           <UserDetailsUpdate/>
           </Suspense>
@@ -59,7 +59,7 @@ dispatch(showMessageDisplay(false));
 
  
       <div className={`2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full 
-      2xl:block 1xl:block xl:block 1lg:block lg:hidden 1md:hidden md:hidden sm:hidden xs:hidden`}>
+      2xl:block 1xl:block xl:block 1lg:block lg:hidden 1md:hidden md:hidden sm:hidden xs:hidden s:hidden`}>
       <Suspense>
         <HeroImage />
       </Suspense>

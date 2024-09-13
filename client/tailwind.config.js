@@ -26,6 +26,7 @@ export default {
           "md":"800px",
          "sm":"600px",
           "xs":"400px",
+          "s":"250px"
       }
     },
   },

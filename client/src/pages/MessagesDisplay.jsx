@@ -16,8 +16,8 @@ export default function MessagesDisplay() {
    
   //  2xl:block xl:block lg:block md:block ${visibledisplay ? "sm:block":"sm:hidden"} ${visibledisplay ? "xs:block":"xs:hidden"} 
   return (
-    <div className={`h-full 2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full 
-    2xl:block xl:block lg:block md:block ${visibledisplay ? "sm:block xs:block":"sm:hidden xs:hidden"}
+    <div className={`h-full 2xl:w-full 1xl:w-full xl:w-full  1lg:w-full lg:w-full 1md:w-full md:w-full sm:w-full xs:w-full s:w-full
+    2xl:block xl:block lg:block md:block ${visibledisplay ? "sm:block xs:block s:block":"sm:hidden xs:hidden s:hidden"}
     `}  >
     { currentuser && currentuser.userId ? (
       <div className=' 2xl:w-full xl:w-full h-full overflow-hidden  flex  flex-col'>
