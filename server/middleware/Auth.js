@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken")
 
 async function restrictToLoggedinUserOnly(context){
 
-   
-    const token = context.req.rawHeaders[15];
+    const token = context.req.cookies.token;
+    // const token = context.req.rawHeaders[15];
     if(!token)  throw new Error("Session Expired, please login");
     const user = getUser(token);
 

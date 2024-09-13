@@ -24,8 +24,7 @@ signinUser(email:$email,password:$password){
  }
  email,
  about
- },
- token
+ }
 }
  }
 `
@@ -57,10 +56,8 @@ export default function Login() {
       Dispatch(setUserDetails(data.signinUser.candidate))
       setEmail('')
       setPassword('')
-      localStorage.setItem("S_ID",data.signinUser.token);
       alert(data.signinUser.msg);
-      
-      navigate("/rooms")
+      navigate("/rooms");
        }
      },[data])
 

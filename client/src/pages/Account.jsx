@@ -30,10 +30,10 @@ dispatch(showUserDetailspage(false))
 dispatch(showMessageDisplay(false));
   dispatch(chatinguserLists(true));
 
-  const token = localStorage.getItem('S_ID'); 
+  // const token = localStorage.getItem('S_ID'); 
 
   useMemo(()=>{
-    if(LogoutUser !== null || token === "" || token === null){
+    if(LogoutUser !== null){
       alert("Session Expired, please login");
       socket.emit("client-disconnect", {userId: S_UID._id})
       socket.disconnect();

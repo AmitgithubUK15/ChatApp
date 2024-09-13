@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { setUser } = require("../utils/verifyUser.js");
 
 
-async function GoogleAuth(req){
+async function GoogleAuth(req,res){
 
 
   try {
@@ -14,8 +14,14 @@ async function GoogleAuth(req){
      if(user){
       const token = setUser(user);
       const {password: pass,...rest} = user._doc;
-      
-      return {msg:"Login successfull",candidate:rest,token:token};
+
+      res.cookie('token',token,
+        {httpOnly:true,
+          secure:true,
+          sameSite: 'None', 
+        });
+
+      return {msg:"Login successfull",candidate:rest};
      }
      else{
       const GeneratePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
@@ -34,7 +40,14 @@ async function GoogleAuth(req){
        
        const token = setUser(newUser);
        const {password:pass, ...rest} = newUser._doc;
-       return {msg:"Login successfull",candidate:rest,token:token};
+
+       res.cookie('token',token,
+        {httpOnly:true,
+          secure:true,
+          sameSite: 'None', 
+        });
+
+       return {msg:"Login successfull",candidate:rest};
      }
   } catch (error) {
    
@@ -58,6 +71,7 @@ async function SignupUser(req,next){
     if(!process) throw new InternalServerError("User not created");
     
     const {password:pass, ...rest} = user._doc;
+    
     return {msg:"User created successfully",candidate:rest};
   } catch (error) {
    
@@ -70,7 +84,7 @@ async function GetAllUser(){
   try {
     const findall = await User.find();
     if(!findall) throw new InternalServerError("Users not found"); 
-
+    
     return findall;
   } catch (error) {
     console.log(error);
@@ -96,9 +110,13 @@ async function Signin(req,res){
       
     const {password:pass, ...rest} = user._doc;
 
-    //  res.cookie('token',token,{httpOnly:true});
+     res.cookie('token',token,
+      {httpOnly:true,
+        secure:true,
+        sameSite: 'None', 
+      });
 
-     return {msg:"Login successfull",candidate:rest,token:token};
+     return {msg:"Login successfull",candidate:rest};
   } catch (error) {
    
     throw new InternalServerError(error.message || "Internal server error");
@@ -179,6 +197,11 @@ async function update_user_about(args){
   }
 }
 
+async function Logoutuser(res){
+   res.clearCookie('token');
+   return {msg: "Logout successfully"}
+}
+
 module.exports = {
     GoogleAuth,
     GetAllUser,
@@ -186,5 +209,6 @@ module.exports = {
     SignupUser,
     updateprofile_pic,
     Update_userName,
-    update_user_about
+    update_user_about,
+    Logoutuser
 }

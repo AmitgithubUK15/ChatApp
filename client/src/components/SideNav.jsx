@@ -7,25 +7,39 @@ import { logout } from '../redux/user/userSlice';
 import { useSocket } from '../context/SocketProvider';
 import { setCurrentUser } from '../redux/CurrentChatuser/CurrentchatuserSlice';
 import { chatinguserLists, showMessageDisplay } from '../redux/Messagedisplay/MessagedisplaySlice';
+import { gql, useMutation } from '@apollo/client';
 
-
+const LogoutFn = gql`
+ mutation Logoutfn {
+   Logout{
+   msg
+   }
+ }
+`
 
 
 export default function SideNav() {
-    
+    const [Logout] = useMutation(LogoutFn);
     const {S_UID} = useSelector((state)=>state.user);
     const {currentuser} = useSelector((state)=>state.userdetails);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const socket = useSocket();
     
-    function  HandleLogout(){
-      socket.emit("client-disconnect", {userId: S_UID._id})
-      socket.disconnect();
-      dispatch(logout());
-      localStorage.clear();
-      dispatch(setCurrentUser(null));
-      navigate("/login");
+    async function  HandleLogout(){
+     try {
+        const {data} = await Logout();
+        if(data.Logout.msg === "Logout successfully"){
+            socket.emit("client-disconnect", {userId: S_UID._id})
+            socket.disconnect();
+            dispatch(logout());
+            localStorage.clear();
+            dispatch(setCurrentUser(null));
+            navigate("/login");
+        }
+     } catch (error) {
+        console.log(error.message);
+     }
     }
 
    function ResetCurrentChatingUser(){

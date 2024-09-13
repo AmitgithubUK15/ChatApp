@@ -1,6 +1,6 @@
 const { GraphQLObjectType, GraphQLString,GraphQLInputObjectType, GraphQLID, GraphQLList, GraphQLSchema ,GraphQLNonNull} = require('graphql');
 const {buildSchema} = require("graphql");
-const { GoogleAuth,GetAllUser,Signin, SignupUser, updateprofile_pic, Update_userName, update_user_about } = require('../controllers/User.controllers');
+const { GoogleAuth,GetAllUser,Signin, SignupUser, updateprofile_pic, Update_userName, update_user_about, Logoutuser } = require('../controllers/User.controllers');
 const { restrictToLoggedinUserOnly } = require('../middleware/Auth');
 const { GraphQLError } = require('graphql');
 const { AddUserForChat, CheckOnlineUser,ChatingUser, Getusermsg, deleteMsgFromDatabase, DeleteUser_InChat, getMessageDetail} = require('../controllers/Chat.controllers');
@@ -148,7 +148,7 @@ const MutationType = new GraphQLObjectType({
                 avatar: {type: FileMsg_Response_Type}
             },
             resolve: (parent,args,context)=>{
-                return GoogleAuth(args);
+                return GoogleAuth(args, context.res);
             }
         },
         createUser:{
@@ -174,6 +174,15 @@ const MutationType = new GraphQLObjectType({
                 return Signin(args,context.res);
             }
         },
+
+        Logout :{
+        type:ResponseType,
+        resolve: async (parent,args,context) =>{
+            await restrictToLoggedinUserOnly(context);
+            return Logoutuser(context.res)
+        }
+        },
+
         CheckUserOnline :{
             type:ResponseType,
             args:{
@@ -313,7 +322,8 @@ const MutationType = new GraphQLObjectType({
 
                 return getMessageDetail(args);
             }
-        }
+        },
+
 
     }
 })

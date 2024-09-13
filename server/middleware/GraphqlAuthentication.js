@@ -2,7 +2,6 @@ const { graphqlHTTP } = require('express-graphql');
 const schema = require('../Graphql/User.GraphqlSchema.js');
 
 const graphqlAuthorize = (req, res, next) => {
-    console.log(req);
     graphqlHTTP({
         schema: schema,
         graphiql: true,
